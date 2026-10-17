@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Símbolo Partiva em fundo escuro</title>
+  <desc id="desc">Duas faixas curvas brancas e cinza formando um percurso compacto.</desc>
+  <path d="M21 27h51c21 0 34 12 34 29S93 85 72 85H54l18 16" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="15" />
+  <path d="M21 44h46c10 0 17 5 17 12s-7 13-17 13H21" fill="none" stroke="#a9b5b8" stroke-linecap="round" stroke-linejoin="round" stroke-width="8" />
+</svg>

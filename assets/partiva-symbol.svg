@@ -1,11 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
   <title id="title">Símbolo Partiva</title>
-  <desc id="desc">Letra P geométrica com um recorte negativo que sugere o perfil de um rato mecânico.</desc>
-  <defs>
-    <mask id="mechanic-cutout" maskUnits="userSpaceOnUse" x="0" y="0" width="128" height="128">
-      <rect width="128" height="128" fill="#fff" />
-      <path fill="#000" d="M62 43c5-5 13-7 21-4l10 4 10 1c3 0 4 3 1 5l-9 4c-2 1-3 3-3 5v4c0 4-3 8-7 9l-7 2-4 6c-2 2-6 2-8 0l-3-3-4 1c-2 1-4-1-3-3l2-3c-4-3-6-8-5-13 1-6 4-11 9-15Zm6 3c-3 3-4 7-3 11 1 4 4 7 8 8l4-2c2-1 4 0 4 2 0 2-2 4-4 5l5-1c3-1 5-4 5-7v-6c0-3 2-6 5-7l3-2-6-1c-7-2-15-1-21 0Z" />
-    </mask>
-  </defs>
-  <path fill="#0f7079" fill-rule="evenodd" mask="url(#mechanic-cutout)" d="M23 13h48c27 0 43 16 43 40 0 24-16 40-43 40H53v22H23V13Zm30 24v31h15c11 0 17-5 17-15s-6-16-17-16H53Z" />
+  <desc id="desc">Duas faixas curvas formando um percurso compacto, com saída diagonal inspirada em uma pista.</desc>
+  <path d="M21 27h51c21 0 34 12 34 29S93 85 72 85H54l18 16" fill="none" stroke="#0f7079" stroke-linecap="round" stroke-linejoin="round" stroke-width="15" />
+  <path d="M21 44h46c10 0 17 5 17 12s-7 13-17 13H21" fill="none" stroke="#8ebdc0" stroke-linecap="round" stroke-linejoin="round" stroke-width="8" />
 </svg>
