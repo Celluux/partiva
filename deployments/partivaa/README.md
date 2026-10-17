@@ -10,6 +10,8 @@ para esta instalação.
 - Branch de prévia: `codex/partiva-operacional`
 - Worker: `partivaa-api`
 
-Os valores públicos da instalação devem ser fornecidos por variáveis de
-ambiente no build. Segredos do Worker devem ser cadastrados com Wrangler e
-nunca commitados.
+O arquivo `frontend.public.json` contém somente a URL do projeto e a chave
+publicável do Supabase. Essa chave é própria para uso no navegador e não é uma
+credencial administrativa. O build do Pages lê esse arquivo por meio de
+`scripts/build-pages.mjs`; chaves secretas nunca entram no bundle. Segredos do
+Worker devem ser cadastrados com Wrangler e nunca commitados.
