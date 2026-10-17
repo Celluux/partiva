@@ -1,4 +1,5 @@
 import { legacyDetails, legacyHistory } from "./legacy-view.js";
+import { operationalColumn, isLegacyPhotoColumn } from "./overview-data.js";
 import {
   CATALOG,
   BRANDS,
@@ -365,6 +366,19 @@ export const editorMethods = {
         this.notify(
           `Detran já cadastrado em ${result.duplicates} outra(s) peça(s).`,
         );
+      // Fetch the audit records produced by the successful save. No local
+      // synthetic event is used to fill the overview's recent activity.
+      try {
+        const events = await this.repo.all("part_events", (q) =>
+          q.eq("workspace_id", this.data.company.id).eq("part_id", editor.id),
+        );
+        this.data.events = [
+          ...this.data.events.filter((event) => event.part_id !== editor.id),
+          ...events,
+        ];
+      } catch {
+        /* The periodic synchronization retries a failed history read. */
+      }
       this.render();
     })().finally(() => {
       this.saving = null;
@@ -592,7 +606,16 @@ export const editorMethods = {
       pending = this.missing(p),
       root = $("#panel-actions");
     root.innerHTML = `<h3>Andamento operacional</h3><label class="field"><span>Etapa atual</span><select id="piece-destination" ${!this.access.parts || p.archived_at ? "disabled" : ""}>${options(
-      this.data.columns.map((c) => [c.id, c.name]),
+      this.data.columns
+        .filter((c) => operationalColumn(c) || c.id === p.column_id)
+        .map((c) => [
+          c.id,
+          isLegacyPhotoColumn(c)
+            ? "Fotografias pendentes · referência importada"
+            : c.name === "Publicação"
+              ? "Pronto para publicação"
+              : c.name,
+        ]),
       p.column_id,
     )}</select></label><div class="finance-summary"><div><span>Anúncio</span><strong>${h(LISTING_LABELS[p.listing_status])}</strong></div><div><span>Disponibilidade</span><strong>${h(SALE_LABELS[p.sale_status])}</strong></div></div><h3>Pendências para anúncio</h3>${pending.length ? `<ul class="pending-list">${pending.map((x) => `<li>${h(x)}</li>`).join("")}</ul>` : '<p class="notice success">Informações e fotografias essenciais completas.</p>'}<p class="notice">Mercado Livre: integração não conectada. Marcar como pronto registra apenas a revisão interna.</p><div class="action-bar">${this.access.parts && !p.archived_at ? `<button id="mark-ready" class="primary-button" type="button" ${pending.length ? "disabled" : ""}>Marcar anúncio pronto</button>` : ""}${this.access.sales && !p.archived_at && !p.legacy_hold ? (p.sale_status === "available" ? '<button class="secondary-button" data-sale-action="reserve" type="button">Reservar</button>' : "") + (p.sale_status !== "sold" ? '<button class="secondary-button" data-sale-action="sell_local" type="button">Venda presencial</button><button class="secondary-button" data-sale-action="sell_online" type="button">Registrar venda online confirmada</button>' : "") + (p.sale_status === "reserved" ? '<button class="secondary-button" data-sale-action="release" type="button">Cancelar reserva</button>' : "") + (p.sale_status === "sold" ? '<button class="secondary-button" data-sale-action="cancel" type="button">Cancelar venda</button>' : "") : ""}${p.legacy_hold && this.access.admin ? '<button id="release-legacy-hold" class="secondary-button" type="button">Retirar do repouso</button>' : ""}${this.access.parts ? `<button id="archive-piece" class="danger-button" type="button">${p.archived_at ? "Restaurar peça" : "Excluir da operação"}</button>` : ""}</div>`;
     $("#release-legacy-hold")?.addEventListener("click", () =>

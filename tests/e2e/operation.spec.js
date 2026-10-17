@@ -35,6 +35,10 @@ async function login(page, role = "admin") {
     .click();
   // The first login also compiles and loads the complete application in Vite.
   await expect(page.locator("#application")).toBeVisible({ timeout: 15000 });
+  // These regression scenarios operate in the board; the default landing is the overview.
+  if (!(await page.locator('[data-nav="board"]').isVisible()))
+    await page.getByRole("button", { name: "Menu", exact: true }).click();
+  await page.locator('[data-nav="board"]').click();
 }
 async function draft(page, name = "Motor") {
   await page.getByRole("button", { name: "+ Nova peça", exact: true }).click();

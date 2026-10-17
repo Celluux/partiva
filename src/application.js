@@ -16,6 +16,21 @@ import { $, h, date, options, EVENT_LABELS } from "./ui.js";
 import { editorMethods } from "./editor.js";
 import { companyMethods } from "./company.js";
 import { navigationMethods, routeView } from "./navigation.js";
+import {
+  overviewMethods,
+  overviewRouteFilters,
+  emptyFilters,
+} from "./overview.js";
+import {
+  isOperationalPiece,
+  operationalPhase,
+  operationalColumn,
+  isLegacyPhotoColumn,
+  presentedColumn,
+  reorderOperationalColumns,
+  OPERATIONAL_STAGES,
+} from "./overview-data.js";
+import { icon } from "./icons.js";
 import mascotUrl from "../assets/partiva-mascot.png";
 export class Application {
   constructor(repo, onAccessError) {
@@ -27,15 +42,8 @@ export class Application {
       this.navigate(routeView(location.hash), true);
     };
     window.addEventListener("hashchange", this.onRoute);
-    this.filters = {
-      query: "",
-      category: "",
-      column: "",
-      sale: "",
-      listing: "",
-      pending: false,
-      archived: false,
-    };
+    this.filters = overviewRouteFilters(location.hash);
+    this.routeFiltered = this.view === "table" && location.hash.includes("?");
     this.sort = { key: "internal_number", direction: -1 };
     this.urls = new Map();
     this.stopped = false;
@@ -86,14 +94,15 @@ export class Application {
       },
       25 * 60 * 1000,
     );
-    document
-      .querySelectorAll("[data-nav]")
-      .forEach((b) => (b.onclick = () => this.navigate(b.dataset.nav)));
+    document.querySelectorAll("[data-nav]").forEach((b) => {
+      const label = b.textContent.trim();
+      b.innerHTML = `<span class="nav-icon">${icon(b.dataset.nav)}</span><span class="nav-label">${h(label)}</span>`;
+      b.onclick = () => this.navigate(b.dataset.nav);
+    });
     $("#refresh-data").onclick = () =>
       this.run(() => this.refresh(), "Dados atualizados");
     $("#pending-button").onclick = () => {
-      this.filters.pending = true;
-      this.navigate("table");
+      this.showOverviewTarget("pending");
     };
     $("#help-button").onclick = () =>
       this.action(
@@ -122,6 +131,7 @@ export class Application {
     clearInterval(this.urlRefresh);
     clearTimeout(this.refreshTimer);
     clearTimeout(this.autosave);
+    clearTimeout(this.searchTimer);
     window.removeEventListener("beforeunload", this.onBeforeUnload);
     window.removeEventListener("hashchange", this.onRoute);
     $("#piece-dialog").removeEventListener("cancel", this.onCancel);
@@ -199,7 +209,7 @@ export class Application {
       6500,
     );
   }
-  navigate(view, fromHistory = false) {
+  navigate(view, fromHistory = false, query = "") {
     if (
       (this.companyDirty || this.memberDirty) &&
       !confirm("Descartar as alterações da empresa ainda não salvas?")
@@ -210,9 +220,20 @@ export class Application {
     this.companyDirty = false;
     this.memberDirty = false;
     clearTimeout(this.commercialSearch);
+    clearTimeout(this.searchTimer);
+    const targetHash = fromHistory
+      ? location.hash
+      : `#/${view}${query ? `?${query}` : ""}`;
+    if (view === "table" && (targetHash.includes("?") || this.routeFiltered)) {
+      this.filters = overviewRouteFilters(targetHash);
+      this.routeFiltered = targetHash.includes("?");
+    } else if (view === "board" && this.routeFiltered) {
+      this.filters = emptyFilters();
+      this.routeFiltered = false;
+    }
     this.view = view;
-    if (!fromHistory && location.hash !== `#/${view}`)
-      history.pushState(null, "", `#/${view}`);
+    if (!fromHistory && location.hash !== targetHash)
+      history.pushState(null, "", targetHash);
     $("#application").classList.remove("menu-open");
     $("#mobile-menu").setAttribute("aria-expanded", "false");
     this.render();
@@ -263,6 +284,7 @@ export class Application {
       );
     });
     $("#page-title").textContent = {
+      overview: "Visão geral",
       board: "Quadro operacional",
       table: "Peças em tabela",
       listings: "Anúncios",
@@ -272,6 +294,7 @@ export class Application {
       company: "Minha Empresa",
     }[this.view];
     $("#workspace-content").setAttribute("aria-busy", "false");
+    if (this.view === "overview") return this.renderOverview();
     if (this.view === "company") return this.renderCompany();
     if (this.view === "activity") return this.renderActivity();
     if (["listings", "sales", "reservations"].includes(this.view))
@@ -281,7 +304,21 @@ export class Application {
   filtered() {
     return this.data.pieces
       .filter((p) =>
-        matches(p, this.filters, this.photos(p.id), this.data.company),
+        this.view === "board"
+          ? isOperationalPiece(p)
+          : (this.filters.scope !== "operational" || isOperationalPiece(p)) &&
+            (!this.filters.phase ||
+              operationalPhase(p, this.data.columns) === this.filters.phase),
+      )
+      .filter((p) =>
+        matches(
+          this.view === "board"
+            ? { ...p, column_id: presentedColumn(p, this.data.columns) }
+            : p,
+          this.filters,
+          this.photos(p.id),
+          this.data.company,
+        ),
       )
       .sort((a, b) => {
         const value = (p) =>
@@ -313,12 +350,31 @@ export class Application {
     const pieces = this.filtered();
     $("#workspace-content").innerHTML =
       `<section class="board-header"><div class="board-title-row"><div><div class="eyebrow">OPERAÇÃO DE PEÇAS</div><h1>${h($("#page-title").textContent)}</h1><p class="board-description">${pieces.length} peça(s) nesta consulta. Informações compartilhadas com a equipe.</p></div>${this.access.parts ? '<button class="primary-button" id="new-piece" type="button">+ Nova peça</button>' : ""}</div><div class="board-toolbar"><div class="toolbar-left"><label class="search-box"><input id="search-input" type="search" aria-label="Buscar peças" placeholder="Peça, veículo, Detran ou identificador" value="${h(this.filters.query)}"/></label><button class="filter-button" id="toggle-filters" type="button" aria-expanded="${Boolean(this.showFilters)}">Filtros</button>${Object.values(this.filters).some(Boolean) ? '<button class="text-button" id="clear-filters" type="button">Limpar filtros</button>' : ""}</div><div class="toolbar-right"><button class="view-button ${this.view === "board" ? "active" : ""}" id="view-board" type="button">Quadro</button><button class="view-button ${this.view !== "board" ? "active" : ""}" id="view-table" type="button">Tabela</button>${this.view !== "board" ? '<button class="secondary-button" id="table-settings" type="button">Colunas da tabela</button>' : ""}</div></div>${this.showFilters ? this.filterMarkup() : ""}</section>${this.view === "listings" ? '<div class="workspace-panel"><p class="view-note">Mercado Livre: <strong>integração não conectada</strong>. Prepare e revise anúncios. Publicação real dependerá da API oficial.</p></div>' : ""}${this.view === "sales" ? '<div class="workspace-panel"><p class="view-note">Reservas e vendas são independentes das etapas operacionais. Registros online exigem pedido e confirmação manual; não há sincronização com marketplaces.</p></div>' : ""}${this.view === "board" ? this.boardMarkup(pieces) : `<div class="workspace-panel">${this.tableMarkup(pieces)}</div>`}`;
+    if (this.view === "board" || this.filters.scope || this.filters.phase) {
+      const label =
+        this.view === "board"
+          ? "Fluxo ativo de preparação. Históricos, vendas e repouso estão nas áreas correspondentes."
+          : [
+              this.filters.scope === "operational"
+                ? "Somente o fluxo ativo"
+                : "",
+              OPERATIONAL_STAGES.find((s) => s.key === this.filters.phase)
+                ?.label,
+            ]
+              .filter(Boolean)
+              .join(" · ");
+      $("#workspace-content .board-header").insertAdjacentHTML(
+        "beforeend",
+        `<p class="operation-scope">${h(label)}</p>`,
+      );
+    }
     $("#new-piece")?.addEventListener("click", () => this.openPiece());
     $("#search-input").oninput = (e) => {
       this.filters.query = e.target.value;
       clearTimeout(this.searchTimer);
       this.searchTimer = setTimeout(() => {
         const start = $("#search-input").selectionStart;
+        this.syncFilterRoute();
         this.renderOperation();
         $("#search-input").focus();
         $("#search-input").setSelectionRange(start, start);
@@ -329,15 +385,9 @@ export class Application {
       this.renderOperation();
     };
     $("#clear-filters")?.addEventListener("click", () => {
-      this.filters = {
-        query: "",
-        category: "",
-        column: "",
-        sale: "",
-        listing: "",
-        pending: false,
-        archived: false,
-      };
+      this.filters = emptyFilters();
+      this.routeFiltered = false;
+      history.replaceState(null, "", `#/${this.view}`);
       this.renderOperation();
     });
     $("#view-board").onclick = () => this.navigate("board");
@@ -348,6 +398,7 @@ export class Application {
         (el.onchange = () => {
           this.filters[el.dataset.filter] =
             el.type === "checkbox" ? el.checked : el.value;
+          this.syncFilterRoute();
           this.renderOperation();
         }),
     );
@@ -386,19 +437,49 @@ export class Application {
     }
   }
   filterMarkup() {
-    return `<div class="filter-panel"><label class="field"><span>Categoria</span><select data-filter="category">${options([...new Set([...CATEGORIES, ...this.data.pieces.map((p) => p.category).filter(Boolean)])], this.filters.category, "Todas")}</select></label><label class="field"><span>Etapa</span><select data-filter="column">${options(
-      this.data.columns.map((c) => [c.id, c.name]),
+    const board = this.view === "board";
+    const saleOptions = Object.entries(SALE_LABELS).filter(
+      ([key]) => !board || ["available", "reserved"].includes(key),
+    );
+    const listingOptions = Object.entries(LISTING_LABELS).filter(
+      ([key]) =>
+        !board || ["draft", "review", "ready", "not_applicable"].includes(key),
+    );
+    return `<div class="filter-panel"><label class="field"><span>Categoria</span><select data-filter="category">${options([...new Set([...CATEGORIES, ...this.data.pieces.map((p) => p.category).filter(Boolean)])], this.filters.category, "Todas")}</select></label>${
+      !board
+        ? `<label class="field"><span>Etapa do fluxo</span><select data-filter="phase">${options(
+            OPERATIONAL_STAGES.map((s) => [s.key, s.label]),
+            this.filters.phase,
+            "Todas",
+          )}</select></label>`
+        : ""
+    }<label class="field"><span>Coluna do quadro</span><select data-filter="column">${options(
+      this.data.columns
+        .filter((c) => !board || operationalColumn(c))
+        .map((c) => [c.id, c.name]),
       this.filters.column,
       "Todas",
-    )}</select></label><label class="field"><span>Disponibilidade</span><select data-filter="sale">${options(Object.entries(SALE_LABELS), this.filters.sale, "Todas")}</select></label><label class="field"><span>Anúncio</span><select data-filter="listing">${options(Object.entries(LISTING_LABELS), this.filters.listing, "Todos")}</select></label><label class="check-field"><input type="checkbox" data-filter="pending" ${this.filters.pending ? "checked" : ""}/> Com pendências</label><label class="check-field"><input type="checkbox" data-filter="archived" ${this.filters.archived ? "checked" : ""}/> Excluídas da operação</label></div>`;
+    )}</select></label><label class="field"><span>Disponibilidade</span><select data-filter="sale">${options(saleOptions, this.filters.sale, "Todas")}</select></label><label class="field"><span>Anúncio</span><select data-filter="listing">${options(listingOptions, this.filters.listing, "Todos")}</select></label><label class="check-field"><input type="checkbox" data-filter="pending" ${this.filters.pending ? "checked" : ""}/> Com pendências</label>${!board ? `<label class="check-field"><input type="checkbox" data-filter="archived" ${this.filters.archived ? "checked" : ""}/> Excluídas da operação</label>` : ""}</div>`;
+  }
+  syncFilterRoute() {
+    if (this.view !== "table") return;
+    const query = new URLSearchParams(
+      Object.entries(this.filters)
+        .filter(([, v]) => Boolean(v))
+        .map(([k, v]) => [k, String(v)]),
+    ).toString();
+    this.routeFiltered = Boolean(query);
+    history.replaceState(null, "", `#/table${query ? `?${query}` : ""}`);
   }
   boardMarkup(pieces) {
-    return `<section class="kanban-scroll" aria-label="Quadro de peças"><div class="kanban-board">${this.data.columns
+    const columns = this.data.columns.filter(operationalColumn);
+    const shownColumn = (p) => presentedColumn(p, this.data.columns);
+    return `<section class="kanban-scroll" aria-label="Quadro de peças"><div class="kanban-board">${columns
       .map(
         (c) =>
-          `<article class="kanban-column" data-drop-column="${c.id}"><header class="column-header"><div class="column-title"><span class="column-dot" style="background:${/^#[\da-f]{6}$/i.test(c.color) ? c.color : "#0e6b6e"}"></span><strong>${h(c.name)}</strong><span class="column-count">${pieces.filter((p) => p.column_id === c.id).length}</span></div>${this.access.columns ? `<button class="column-menu" data-column-edit="${c.id}" type="button" aria-label="Configurar ${h(c.name)}">•••</button>` : ""}</header><div class="cards-stack">${
+          `<article class="kanban-column" data-drop-column="${c.id}"><header class="column-header"><div class="column-title"><span class="column-dot" style="background:${/^#[\da-f]{6}$/i.test(c.color) ? c.color : "#0e6b6e"}"></span><strong>${h(c.name === "Publicação" ? "Pronto para publicação" : c.name)}</strong><span class="column-count">${pieces.filter((p) => shownColumn(p) === c.id).length}</span></div>${this.access.columns ? `<button class="column-menu" data-column-edit="${c.id}" type="button" aria-label="Configurar ${h(c.name)}">•••</button>` : ""}</header><div class="cards-stack">${
             pieces
-              .filter((p) => p.column_id === c.id)
+              .filter((p) => shownColumn(p) === c.id)
               .map((p) => this.cardMarkup(p))
               .join("") ||
             '<div class="empty-column"><strong>Nenhuma peça nesta etapa</strong></div>'
@@ -421,11 +502,14 @@ export class Application {
   tableValue(p, key) {
     if (key === "vehicle") return vehicle(p);
     if (key === "price_cents") return money(p.price_cents);
-    if (key === "column_id")
-      return (
-        this.data.columns.find((c) => c.id === p.column_id)?.name ||
-        "Etapa a revisar"
-      );
+    if (key === "column_id") {
+      const column = this.data.columns.find((c) => c.id === p.column_id);
+      return isLegacyPhotoColumn(column)
+        ? "Fotografias pendentes"
+        : column?.name === "Publicação"
+          ? "Pronto para publicação"
+          : column?.name || "Etapa a revisar";
+    }
     if (key === "missing") return `${this.missing(p).length} pendência(s)`;
     if (key === "sale_status")
       return p.legacy_hold ? "Em repouso" : SALE_LABELS[p[key]];
@@ -500,11 +584,12 @@ export class Application {
     return dialog;
   }
   editColumn(id) {
+    const visibleColumns = this.data.columns.filter(operationalColumn);
     const c = this.data.columns.find((c) => c.id === id),
-      index = this.data.columns.findIndex((c) => c.id === id);
+      index = visibleColumns.findIndex((c) => c.id === id);
     this.action(
       c ? "Configurar coluna" : "Nova coluna",
-      `<label class="field"><span>Nome</span><input name="name" maxlength="80" required value="${h(c?.name || "")}"/></label><div class="filter-panel"><label class="field"><span>Cor</span><input name="color" type="color" value="${h(c?.color || "#0e6b6e")}"/></label><label class="field"><span>Regra da etapa</span><select name="phase" required>${options(Object.entries(PHASES), c?.phase || "registration")}</select></label></div><p class="muted">Preparação e publicação exigem informações e fotografias completas.</p>${c ? `<div class="column-controls"><button class="secondary-button" id="column-left" type="button" ${index === 0 ? "disabled" : ""}>Mover para esquerda</button><button class="secondary-button" id="column-right" type="button" ${index === this.data.columns.length - 1 ? "disabled" : ""}>Mover para direita</button></div><label class="field"><span>Destino das peças ao excluir</span><select id="column-destination">${options(this.data.columns.filter((c) => c.id !== id).map((c) => [c.id, c.name]))}</select></label><p class="muted">As peças serão transferidas juntas. Nenhuma será apagada.</p><button class="danger-button" id="column-delete" type="button" ${this.data.columns.length < 2 ? "disabled" : ""}>Excluir esta coluna</button>` : ""}`,
+      `<label class="field"><span>Nome</span><input name="name" maxlength="80" required value="${h(c?.name || "")}"/></label><div class="filter-panel"><label class="field"><span>Cor</span><input name="color" type="color" value="${h(c?.color || "#0e6b6e")}"/></label><label class="field"><span>Regra da etapa</span><select name="phase" required>${options(Object.entries(PHASES), c?.phase || "registration")}</select></label></div><p class="muted">Preparação e publicação exigem informações e fotografias completas.</p>${c ? `<div class="column-controls"><button class="secondary-button" id="column-left" type="button" ${index === 0 ? "disabled" : ""}>Mover para esquerda</button><button class="secondary-button" id="column-right" type="button" ${index === visibleColumns.length - 1 ? "disabled" : ""}>Mover para direita</button></div><label class="field"><span>Destino das peças ao excluir</span><select id="column-destination">${options(visibleColumns.filter((c) => c.id !== id).map((c) => [c.id, c.name]))}</select></label><p class="muted">As peças serão transferidas juntas. Nenhuma será apagada.</p><button class="danger-button" id="column-delete" type="button" ${visibleColumns.length < 2 ? "disabled" : ""}>Excluir esta coluna</button>` : ""}`,
       async (form) => {
         await this.repo.rpc("column_action", {
           command: c ? "update" : "create",
@@ -527,8 +612,7 @@ export class Application {
       ])
         $(sel).onclick = () =>
           this.run(async () => {
-            const ids = this.data.columns.map((c) => c.id);
-            [ids[index], ids[index + delta]] = [ids[index + delta], ids[index]];
+            const ids = reorderOperationalColumns(this.data.columns, id, delta);
             await this.repo.rpc("column_action", {
               command: "reorder",
               payload: { ids },
@@ -539,13 +623,38 @@ export class Application {
       $("#column-delete").onclick = () =>
         this.run(async () => {
           const destination = $("#column-destination").value;
-          if (!destination) throw new Error("Escolha o destino das peças.");
+          if (
+            visibleColumns.length < 2 ||
+            !visibleColumns.some(
+              (column) => column.id === destination && column.id !== id,
+            )
+          )
+            throw new Error("Escolha outra coluna operacional como destino.");
           if (!confirm(`Excluir a coluna ${c.name} e transferir suas peças?`))
             return;
-          await this.repo.rpc("column_action", {
-            command: "delete",
-            payload: { id, version: c.version, destination },
-          });
+          // Imported photo records can share a visible queue while preserving
+          // their original column. Transfer those records first, using the
+          // same guarded/versioned move operation as a normal card movement.
+          // On a conflict the column remains; no record is deleted or hidden.
+          try {
+            const aliases = this.data.pieces.filter(
+              (p) =>
+                isOperationalPiece(p) &&
+                p.column_id !== id &&
+                presentedColumn(p, this.data.columns) === id,
+            );
+            for (const piece of aliases)
+              await this.repo.rpc("save_part", {
+                payload: { id: piece.id, column_id: destination },
+                expected_version: piece.version,
+              });
+            await this.repo.rpc("column_action", {
+              command: "delete",
+              payload: { id, version: c.version, destination },
+            });
+          } finally {
+            await this.refresh();
+          }
           $("#action-dialog").close();
           await this.refresh();
         }, "Coluna removida com as peças preservadas");
@@ -587,4 +696,5 @@ Object.assign(
   editorMethods,
   companyMethods,
   navigationMethods,
+  overviewMethods,
 );

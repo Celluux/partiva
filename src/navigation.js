@@ -2,6 +2,7 @@ import { $, h, date, options, EVENT_LABELS } from "./ui.js";
 import { money, vehicle, LISTING_LABELS } from "./domain.js";
 
 export const VIEWS = [
+  "overview",
   "board",
   "table",
   "listings",
@@ -12,7 +13,7 @@ export const VIEWS = [
 ];
 export function routeView(hash) {
   const view = hash.replace(/^#\//, "").split(/[?&]/)[0];
-  return VIEWS.includes(view) ? view : "board";
+  return VIEWS.includes(view) ? view : "overview";
 }
 const normalize = (s) =>
   String(s ?? "")
