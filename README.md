@@ -27,4 +27,12 @@ Abra `index.html` no navegador. Como a versão inicial é estática, não é nec
 
 ## Deploy
 
-O projeto está estruturado como site estático para Cloudflare Pages e inclui `wrangler.toml`. O repositório pode ser conectado ao GitHub para deploy contínuo.
+O projeto está estruturado como site estático para Cloudflare Pages e inclui `wrangler.toml`.
+
+## Fluxo oficial de atualização
+
+- O GitHub (`Celluux/partiva`, branch `main`) é a fonte oficial do código.
+- Toda alteração feita no projeto deve ser registrada no GitHub antes de ser considerada concluída.
+- O Cloudflare Pages está conectado ao repositório e publica automaticamente cada atualização da branch `main` em `https://partiva.pages.dev/`.
+- O Supabase permanece como backend oficial para autenticação, banco de dados e armazenamento.
+- Não enviar chaves secretas ao navegador ou ao GitHub; apenas a chave publishable do Supabase pode aparecer em `config.js`.
