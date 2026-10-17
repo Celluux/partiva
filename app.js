@@ -33,6 +33,7 @@ function money(value) { return value ? new Intl.NumberFormat("pt-BR", { style: "
 function escapeHtml(value = "") { return String(value).replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#039;", '"': "&quot;" }[char])); }
 function tagClass(tag = "") { if (tag === "Pronto") return "tag-green"; if (tag === "Em análise") return "tag-orange"; if (tag === "Em preparação") return "tag-purple"; return "tag-blue"; }
 function columnDot(column) { return `<span class="column-dot" style="background:${column.color}"></span>`; }
+function emptyColumnMarkup(columnId) { return `<div class="empty-column"><img class="empty-mascot" src="assets/partiva-mascot.png" alt="" aria-hidden="true" /><strong>Nenhuma peça nesta etapa</strong><span>O próximo cadastro pode começar aqui.</span><button class="text-button quick-add" data-column-id="${columnId}" type="button">Adicionar peça</button></div>`; }
 function render() {
   const query = $("#search-input").value.trim().toLowerCase();
   const board = $("#kanban-board");
@@ -40,7 +41,7 @@ function render() {
   board.innerHTML = state.columns.map((column) => {
     const pieces = state.pieces.filter((piece) => piece.columnId === column.id && (!query || [piece.title, piece.vehicle, piece.code, piece.category].join(" ").toLowerCase().includes(query)) && (!activeFilters.category || piece.category === activeFilters.category));
     visibleCount += pieces.length;
-    return `<article class="kanban-column"><header class="column-header"><div class="column-title">${columnDot(column)}<strong>${escapeHtml(column.name)}</strong><span class="column-count">${pieces.length}</span></div><button class="column-menu" type="button" data-column-menu="${column.id}">•••</button></header><div class="cards-stack">${pieces.length ? pieces.map(renderCard).join("") : `<div class="empty-column">Nenhuma peça nesta etapa<br><button class="text-button quick-add" data-column-id="${column.id}" type="button">Adicionar peça</button></div>`}</div><button class="add-card-button quick-add" data-column-id="${column.id}" type="button">+ Adicionar peça</button></article>`;
+    return `<article class="kanban-column"><header class="column-header"><div class="column-title">${columnDot(column)}<strong>${escapeHtml(column.name)}</strong><span class="column-count">${pieces.length}</span></div><button class="column-menu" type="button" data-column-menu="${column.id}">•••</button></header><div class="cards-stack">${pieces.length ? pieces.map(renderCard).join("") : emptyColumnMarkup(column.id)}</div><button class="add-card-button quick-add" data-column-id="${column.id}" type="button">+ Adicionar peça</button></article>`;
   }).join("");
   $("#sidebar-card-count").textContent = state.pieces.length;
   updateFilters();

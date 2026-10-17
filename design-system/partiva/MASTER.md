@@ -48,7 +48,7 @@
 
 ### Brand Assets
 
-- **Symbol:** `assets/partiva-symbol.svg` — original geometric P with a transparent negative-space mechanical profile.
+- **Symbol:** `assets/partiva-symbol.svg` — approved two-lane track symbol with a compact curved route and diagonal exit; `assets/partiva-symbol-dark.svg` is the light-on-dark variant.
 - **Mascot:** `assets/partiva-mascot.png` — original teal-and-graphite mechanical mouse mechanic, used as a supporting visual in the institutional and authentication surfaces.
 
 **CSS Import:**

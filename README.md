@@ -39,7 +39,7 @@ O projeto está estruturado como site estático para Cloudflare Pages e inclui `
 
 ## Identidade visual
 
-- Wordmark em Space Grotesk 700, levemente inclinado e com espaçamento compacto, acompanhado por um símbolo P vetorial independente (`assets/partiva-symbol.svg`) com recorte negativo inspirado no perfil mecânico.
+- Wordmark em Space Grotesk 700, levemente inclinado e com espaçamento compacto, acompanhado pelo símbolo P vetorial aprovado (`assets/partiva-symbol.svg`): duas faixas curvas que sugerem uma pista e um fluxo organizado.
 - Paleta baseada em azul-petróleo, branco, cinza-claro, grafite e âmbar operacional.
 - Mascote substituído por um rato mecânico original, separado em `assets/partiva-mascot.png`.
 - Diretrizes persistidas em `.interface-design/system.md` e `design-system/partiva/MASTER.md`.
