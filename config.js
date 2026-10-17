@@ -2,5 +2,5 @@
 // Nunca coloque service_role ou secrets neste arquivo.
 window.PARTIVA_CONFIG = {
   supabaseUrl: "https://twtldgdceidyurinrvsy.supabase.co",
-  supabasePublishableKey: ""
+  supabasePublishableKey: "sb_publishable_JSv9Y10QwU2T-cgR6iVaeg_E-CKld19"
 };
