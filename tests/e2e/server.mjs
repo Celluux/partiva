@@ -8,6 +8,7 @@ const sessions = new Map(),
   files = new Map(),
   secret = randomUUID();
 const allowedTables = new Set([
+  "legacy_drafts",
   "workspace_members",
   "workspaces",
   "board_columns",
@@ -44,7 +45,10 @@ const sign = (value) =>
   createHmac("sha256", secret).update(value).digest("hex");
 http
   .createServer(async (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5173");
+    res.setHeader(
+      "Access-Control-Allow-Origin",
+      `http://127.0.0.1:${Number(process.env.PARTIVA_E2E_PORT || 5173)}`,
+    );
     res.setHeader(
       "Access-Control-Allow-Headers",
       "authorization,apikey,content-type,x-client-info,x-upsert",

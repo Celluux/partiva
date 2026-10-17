@@ -370,7 +370,7 @@ export class Application {
     }
   }
   filterMarkup() {
-    return `<div class="filter-panel"><label class="field"><span>Categoria</span><select data-filter="category">${options(CATEGORIES, this.filters.category, "Todas")}</select></label><label class="field"><span>Etapa</span><select data-filter="column">${options(
+    return `<div class="filter-panel"><label class="field"><span>Categoria</span><select data-filter="category">${options([...new Set([...CATEGORIES, ...this.data.pieces.map((p) => p.category).filter(Boolean)])], this.filters.category, "Todas")}</select></label><label class="field"><span>Etapa</span><select data-filter="column">${options(
       this.data.columns.map((c) => [c.id, c.name]),
       this.filters.column,
       "Todas",
@@ -395,7 +395,7 @@ export class Application {
   cardMarkup(p) {
     const photos = this.photos(p.id),
       cover = photos.find((x) => x.is_cover) || photos[0];
-    return `<button class="piece-card" type="button" data-open-piece="${p.id}" data-drag-piece="${p.id}" draggable="${this.access.parts && !p.archived_at}" aria-label="Abrir peça ${h(p.internal_number)} ${h(p.part_name)}"><div class="card-image">${cover ? `<img data-path="${h(cover.storage_path)}" alt="${h(p.part_name || "Fotografia da peça")}" loading="lazy"/>` : '<span class="card-empty-photo">Fotografias pendentes</span>'}</div><div class="card-labels"><span class="card-code">#${h(p.internal_number)}</span><span class="status-pill ${h(p.sale_status)}">${h(SALE_LABELS[p.sale_status])}</span></div><h3>${h(p.part_name || "Peça em rascunho")}</h3><div class="card-vehicle">${h(vehicle(p))}</div><div class="card-meta"><span>${h(p.category || "Categoria a definir")}</span><span class="card-price">${money(p.price_cents)}</span></div><div class="card-pending">${this.missing(p).length} pendência(s) para anúncio</div></button>`;
+    return `<button class="piece-card" type="button" data-open-piece="${p.id}" data-drag-piece="${p.id}" draggable="${this.access.parts && !p.archived_at}" aria-label="Abrir peça ${h(p.internal_number)} ${h(p.part_name)}"><div class="card-image">${cover ? `<img data-path="${h(cover.storage_path)}" alt="${h(p.part_name || "Fotografia da peça")}" loading="lazy"/>` : '<span class="card-empty-photo">Fotografias pendentes</span>'}</div><div class="card-labels"><span class="card-code">#${h(p.internal_number)}</span>${p.complementary_code ? `<span class="card-code">${h(p.complementary_code)}</span>` : ""}<span class="status-pill ${h(p.sale_status)}">${h(p.legacy_hold ? "Em repouso" : SALE_LABELS[p.sale_status])}</span></div><h3>${h(p.part_name || "Peça em rascunho")}</h3><div class="card-vehicle">${h(vehicle(p))}</div><div class="card-meta"><span>${h(p.category || "Categoria a definir")}</span><span class="card-price">${money(p.price_cents)}</span></div><div class="card-pending">${this.missing(p).length} pendência(s) para anúncio</div></button>`;
   }
   tableMarkup(pieces) {
     if (!pieces.length)
@@ -411,7 +411,8 @@ export class Application {
         "Etapa a revisar"
       );
     if (key === "missing") return `${this.missing(p).length} pendência(s)`;
-    if (key === "sale_status") return SALE_LABELS[p[key]];
+    if (key === "sale_status")
+      return p.legacy_hold ? "Em repouso" : SALE_LABELS[p[key]];
     if (key === "listing_status") return LISTING_LABELS[p[key]];
     if (key === "updated_at") return date(p[key]);
     return p[key] ?? "—";

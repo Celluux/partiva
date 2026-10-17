@@ -32,6 +32,14 @@ export function cliEnvironment() {
 }
 export function runSupabase(args, { capture = false, timeout = 60000 } = {}) {
   if (
+    !capture &&
+    ((args[0] === "projects" && args[1] === "api-keys") ||
+      (args[0] === "db" && args[1] === "dump" && args.includes("--dry-run")))
+  )
+    throw new Error(
+      "Este comando pode exibir credenciais. Use captura privada em memória, sem imprimir a saída.",
+    );
+  if (
     args.includes("--debug") ||
     args.some((arg) => /^(trace|debug)$/.test(arg))
   )

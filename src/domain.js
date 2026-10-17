@@ -15,12 +15,14 @@ export const ROLES = {
   viewer: "Consulta",
 };
 export const SALE_LABELS = {
+  on_hold: "Em repouso",
   available: "Disponível",
   reserved: "Reservada",
   sold: "Vendida",
   cancelled: "Cancelada",
 };
 export const LISTING_LABELS = {
+  legacy_published: "Anunciado no sistema antigo · API não verificada",
   draft: "Rascunho",
   review: "Em revisão",
   ready: "Pronto para anunciar",
@@ -155,7 +157,9 @@ export function applicability(name) {
   };
 }
 export const vehicle = (p) =>
-  [p.brand, p.model, p.year, p.engine].filter(Boolean).join(" ") ||
+  [p.brand, p.model, p.year_compatibility || p.year, p.engine]
+    .filter(Boolean)
+    .join(" ") ||
   p.vehicle ||
   "Veículo a completar";
 export const suggestTitle = (p) =>
@@ -174,12 +178,17 @@ export const suggestTitle = (p) =>
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, 250);
-export function fees(price, company) {
-  if (price == null || !company.fee_configured) return { fee: null, net: null };
+export function fees(price, company, piece = {}) {
+  if (
+    price == null ||
+    (piece.fee_percent_override == null && !company.fee_configured)
+  )
+    return { fee: null, net: null };
   const fee =
-    Math.round((price * Number(company.fee_percent)) / 100) +
-    Number(company.fee_fixed_cents || 0);
-  return { fee, net: price - fee };
+    Math.round(
+      (price * Number(piece.fee_percent_override ?? company.fee_percent)) / 100,
+    ) + Number(piece.fee_fixed_cents_override ?? company.fee_fixed_cents ?? 0);
+  return { fee, net: price - fee - Number(piece.other_cost_cents || 0) };
 }
 export function permissions(role) {
   const admin = ["owner", "manager", "admin"].includes(role);
@@ -203,13 +212,24 @@ export function missingFields(p, photos = [], company = {}) {
     title: "Título do anúncio",
   };
   const missing = Object.entries(names)
-    .filter(([key]) => !String(p[key] ?? "").trim())
+    .filter(
+      ([key]) =>
+        (key === "detran_reference" && /^sem\s+info$/i.test(p[key] || "")) ||
+        !String(
+          key === "year"
+            ? p.year_compatibility || p.year || ""
+            : (p[key] ?? ""),
+        ).trim(),
+    )
     .map(([, name]) => name);
   const applicable = applicability(p.part_name);
   if (applicable.position && !p.position) missing.push("Posição");
   if (applicable.side && !p.side) missing.push("Lado");
   if (!p.price_cents || p.price_cents <= 0) missing.push("Preço válido");
-  if (!company.fee_configured) missing.push("Configuração da taxa estimada");
+  if (p.price_is_suggested)
+    missing.push("Conferir preço sugerido do sistema antigo");
+  if (p.fee_percent_override == null && !company.fee_configured)
+    missing.push("Configuração da taxa estimada");
   const minimum = company.preferences?.minimum_photos ?? 2;
   if (
     new Set(
@@ -241,7 +261,14 @@ export function matches(p, filters, photos, company) {
     return false;
   if (filters.category && p.category !== filters.category) return false;
   if (filters.column && p.column_id !== filters.column) return false;
-  if (filters.sale && p.sale_status !== filters.sale) return false;
+  if (
+    filters.sale &&
+    (filters.sale === "on_hold"
+      ? !p.legacy_hold
+      : p.sale_status !== filters.sale ||
+        (filters.sale === "available" && p.legacy_hold))
+  )
+    return false;
   if (filters.listing && p.listing_status !== filters.listing) return false;
   if (filters.pending && missingFields(p, photos, company).length === 0)
     return false;

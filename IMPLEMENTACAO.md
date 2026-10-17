@@ -60,3 +60,11 @@ A auditoria final não aponta mais os avisos de desempenho RLS corrigidos. Resta
 As peças, configurações, funcionários, histórico e fotografias usam Supabase real. O navegador mantém a sessão de autenticação e recuperação temporária de preenchimento; isso não substitui a persistência do banco.
 
 Nenhum reset, exclusão física de dados, alteração do sistema antigo ou publicação em produção foi executado.
+
+## Migração do sistema antigo — 17/10/2026
+
+Migração real concluída no PARTIVAA: 200 peças salvas e um rascunho adicional, totalizando 201 registros. Foram vinculadas 48 fotografias e preservados oito rascunhos, taxas individuais, compatibilidades em intervalo e histórico. Três rascunhos ambíguos permanecem em Minha Empresa para comparação; não geraram peças duplicadas. Os 57 anúncios antigos usam estado histórico separado da API, e a peça vendida permanece indisponível.
+
+Backup recuperável anterior à escrita e ensaio de restauração isolado aprovados. Reexecução real reutilizou 201 peças, oito rascunhos e 48 fotos, sem duplicação. A auditoria comparou todos os campos e hashes e confirmou a preservação dos 63 arquivos da origem e dos três registros preexistentes. Regressão: 64 testes automatizados, dez testes de navegador e build aprovados.
+
+Dados reais, manifesto, backup e relatório detalhado estão em `artifacts/private/desmonte-migration`, fora do Git. Os scripts genéricos são `backup-partivaa.mjs`, `import-desmonte.mjs` e `verify-desmonte-migration.mjs`. O importador exige `--apply`; a verificação é somente leitura por padrão, com uma opção explícita para completar metadados de arquivo.

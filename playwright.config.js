@@ -1,4 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
+const port = Number(process.env.PARTIVA_E2E_PORT || 5173);
+if (!Number.isInteger(port) || port < 1024 || port > 65535)
+  throw new Error("Porta E2E inválida.");
 export default defineConfig({
   testDir: "tests/e2e",
   testMatch: "*.spec.js",
@@ -6,7 +9,7 @@ export default defineConfig({
   workers: 1,
   timeout: 45000,
   use: {
-    baseURL: "http://127.0.0.1:5173",
+    baseURL: `http://127.0.0.1:${port}`,
     trace: "retain-on-failure",
     screenshot: "only-on-failure",
   },
@@ -21,9 +24,8 @@ export default defineConfig({
   ],
   webServer: [
     {
-      command:
-        "node node_modules/vite/bin/vite.js --host 127.0.0.1 --port 5173 --strictPort",
-      url: "http://127.0.0.1:5173",
+      command: `node node_modules/vite/bin/vite.js --host 127.0.0.1 --port ${port} --strictPort`,
+      url: `http://127.0.0.1:${port}`,
       reuseExistingServer: false,
       env: {
         VITE_SUPABASE_PUBLISHABLE_KEY: "test-public-key",
