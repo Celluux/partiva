@@ -1,6 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
 type Secrets = { SUPABASE_SECRET_KEY?: string };
-const DEV_URL = "https://twtldgdceidyurinrvsy.supabase.co";
 function json(body: unknown, status = 200, origin = "") {
   const headers: Record<string, string> = {
     "Content-Type": "application/json; charset=utf-8",
@@ -48,8 +47,18 @@ export default {
     const origin = request.headers.get("Origin") || "";
     const allowed = origin === env.ALLOWED_ORIGIN ? origin : "";
     const path = new URL(request.url).pathname.replace(/^\/api(?=\/)/, "");
-    if (env.SUPABASE_URL !== DEV_URL)
-      return json({ error: "Backend restrito ao PARTIVAA." }, 503, allowed);
+    let projectUrl: URL;
+    try {
+      projectUrl = new URL(env.SUPABASE_URL);
+      if (!projectUrl.hostname.endsWith(".supabase.co"))
+        throw new Error("host");
+    } catch {
+      return json(
+        { error: "SUPABASE_URL inválida para esta instalação." },
+        503,
+        allowed,
+      );
+    }
     if (origin && !allowed)
       return json({ error: "Origem não autorizada." }, 403);
     if (request.method === "OPTIONS")
@@ -67,7 +76,7 @@ export default {
     if (path === "/health" && request.method === "GET")
       return json(
         {
-          project: "PARTIVAA",
+          projectRef: projectUrl.hostname.split(".")[0],
           invitesConfigured: Boolean(
             env.SUPABASE_SECRET_KEY && env.SUPABASE_PUBLISHABLE_KEY,
           ),
@@ -92,10 +101,14 @@ export default {
         allowed,
       );
     try {
-      const client = createClient(DEV_URL, env.SUPABASE_PUBLISHABLE_KEY, {
-        auth: { persistSession: false, autoRefreshToken: false },
-        global: { headers: { Authorization: authorization } },
-      });
+      const client = createClient(
+        env.SUPABASE_URL,
+        env.SUPABASE_PUBLISHABLE_KEY,
+        {
+          auth: { persistSession: false, autoRefreshToken: false },
+          global: { headers: { Authorization: authorization } },
+        },
+      );
       const { data: userData, error: userError } = await client.auth.getUser(
         authorization.slice(7),
       );
@@ -133,7 +146,7 @@ export default {
           400,
           allowed,
         );
-      const admin = createClient(DEV_URL, env.SUPABASE_SECRET_KEY, {
+      const admin = createClient(env.SUPABASE_URL, env.SUPABASE_SECRET_KEY, {
         auth: { persistSession: false, autoRefreshToken: false },
       });
       // External identity is confirmed by Supabase Auth, never trusted from user metadata.

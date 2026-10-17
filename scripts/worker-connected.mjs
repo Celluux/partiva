@@ -1,12 +1,18 @@
 import { spawn } from "node:child_process";
 import { runSupabase } from "./supabase-auth.mjs";
+import {
+  PROJECT,
+  SUPABASE_URL,
+  requireInstance,
+} from "./lib/instance-config.mjs";
+requireInstance();
 // Privileged key is kept only in the child environment, never in arguments or files.
 const result = runSupabase(
   [
     "projects",
     "api-keys",
     "--project-ref",
-    "twtldgdceidyurinrvsy",
+    PROJECT,
     "--reveal",
     "--output",
     "json",
@@ -14,7 +20,7 @@ const result = runSupabase(
   { capture: true },
 );
 if (result.status !== 0)
-  throw new Error("Acesso protegido ao PARTIVAA indisponível.");
+  throw new Error("Acesso protegido à instalação indisponível.");
 const parsed = JSON.parse(result.stdout),
   keys = Array.isArray(parsed) ? parsed : parsed.api_keys || parsed.data;
 const secret =
@@ -33,6 +39,10 @@ const child = spawn(
     "dev",
     "--config",
     "worker/wrangler.jsonc",
+    "--var",
+    `SUPABASE_URL=${SUPABASE_URL}`,
+    "--var",
+    `ALLOWED_ORIGIN=${process.env.ALLOWED_ORIGIN || "http://127.0.0.1:5173"}`,
   ],
   {
     stdio: "inherit",

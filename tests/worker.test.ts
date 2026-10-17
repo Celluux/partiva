@@ -42,12 +42,12 @@ it("rejects unauthenticated and cross-origin invitations", async () => {
     ).status,
   ).toBe(403);
 });
-it("refuses any other Supabase project", async () => {
+it("refuses an invalid Supabase endpoint", async () => {
   expect(
     (
       await worker.fetch(new Request("http://localhost/health"), {
         ...env,
-        SUPABASE_URL: "https://other.supabase.co",
+        SUPABASE_URL: "https://other.example.com",
       })
     ).status,
   ).toBe(503);

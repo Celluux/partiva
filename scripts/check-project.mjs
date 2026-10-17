@@ -27,7 +27,6 @@ for (const file of paths.filter((p) => /\.(js|mjs)$/.test(p))) {
   assert.equal(result.status, 0, `Syntax error in ${file}: ${result.stderr}`);
 }
 const config = await readFile("config.js", "utf8");
-assert(config.includes("twtldgdceidyurinrvsy.supabase.co"));
 const projectFiles = [
   ...paths,
   ".env.example",
@@ -40,10 +39,9 @@ for (const file of projectFiles) {
   const source = await readFile(file, "utf8");
   const hosts = source.matchAll(/(?:https|wss):\/\/([a-z0-9]+)\.supabase\.co/g);
   for (const [, reference] of hosts)
-    assert.equal(
-      reference,
-      "twtldgdceidyurinrvsy",
-      `Unauthorized project in ${file}`,
+    assert(
+      !reference.includes("YOUR_PROJECT_REF"),
+      `Unconfigured project in ${file}`,
     );
 }
 const html = await readFile("index.html", "utf8");
@@ -58,5 +56,5 @@ for (const file of [...paths, "index.html", "worker/src/index.ts"]) {
   );
 }
 console.log(
-  "Syntax, official-project isolation, private-access UI and secret checks passed.",
+  "Syntax, instance configuration, private-access UI and secret checks passed.",
 );

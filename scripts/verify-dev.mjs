@@ -7,11 +7,10 @@ try {
     process.env[name] ||
     content.match(new RegExp(`^${name}=(.*)$`, "m"))?.[1]?.trim();
   const key = value("VITE_SUPABASE_PUBLISHABLE_KEY");
-  if (!key) throw new Error("Falta chave pública do PARTIVAA.");
-  const url =
-    value("VITE_SUPABASE_URL") || "https://twtldgdceidyurinrvsy.supabase.co";
-  if (url !== "https://twtldgdceidyurinrvsy.supabase.co")
-    throw new Error("Projeto externo não autorizado.");
+  if (!key) throw new Error("Falta a chave pública desta instalação.");
+  const url = value("VITE_SUPABASE_URL");
+  if (!url || !/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(url))
+    throw new Error("VITE_SUPABASE_URL inválida.");
   const email = process.env.PARTIVA_TEST_EMAIL,
     password = process.env.PARTIVA_TEST_PASSWORD;
   if (!email || !password)

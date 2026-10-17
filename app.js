@@ -58,7 +58,7 @@ async function boot() {
     const config = getConfig();
     if (!config.key) {
       message(
-        "Ambiente PARTIVAA preparado. Falta configurar a chave pública do Supabase para habilitar o acesso. Nenhum dado será salvo como demonstração.",
+        "Configure a chave pública do Supabase desta instalação para habilitar o acesso. Nenhum dado será salvo como demonstração.",
       );
       $("#auth-submit").disabled = true;
       $("#forgot-password").disabled = true;

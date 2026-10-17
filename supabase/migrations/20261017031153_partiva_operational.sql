@@ -1,5 +1,4 @@
 -- Additive operational upgrade. Existing pieces, files, events and legacy codes stay intact.
--- Deploy only to PARTIVAA (twtldgdceidyurinrvsy); production deployment is not authorized.
 begin;
 create schema if not exists partiva_private;
 revoke all on schema partiva_private from public, anon;
@@ -22,7 +21,9 @@ create table if not exists public.app_configuration (
   singleton boolean primary key default true check(singleton),
   workspace_id uuid not null references public.workspaces(id)
 );
-insert into public.app_configuration(singleton, workspace_id) values(true, '00000000-0000-0000-0000-000000000001') on conflict do nothing;
+insert into public.app_configuration(singleton, workspace_id)
+select true, id from public.workspaces order by created_at, id limit 1
+on conflict (singleton) do nothing;
 alter table public.workspace_members add column if not exists active boolean not null default true;
 alter table public.workspace_members add column if not exists display_name text not null default '';
 alter table public.workspace_members add column if not exists email text not null default '';

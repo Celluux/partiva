@@ -1,13 +1,19 @@
 import { createClient } from "@supabase/supabase-js";
 import { validatePhoto } from "./domain.js";
-export const DEV_REF = "twtldgdceidyurinrvsy";
 export function getConfig() {
   const url =
     import.meta.env.VITE_SUPABASE_URL ||
     window.PARTIVA_CONFIG?.supabaseUrl ||
-    `https://${DEV_REF}.supabase.co`;
-  if (new URL(url).hostname !== `${DEV_REF}.supabase.co`)
-    throw new Error("Este aplicativo está restrito ao projeto PARTIVAA.");
+    "";
+  let projectRef = "";
+  try {
+    const host = new URL(url).hostname;
+    if (!host.endsWith(".supabase.co")) throw new Error("host");
+    projectRef = host.slice(0, -".supabase.co".length);
+    if (!projectRef || projectRef.includes(".")) throw new Error("ref");
+  } catch {
+    throw new Error("Configure a URL do projeto Supabase desta instalação.");
+  }
   return {
     url,
     key:
@@ -15,6 +21,7 @@ export function getConfig() {
       window.PARTIVA_CONFIG?.supabasePublishableKey ||
       "",
     api: import.meta.env.VITE_API_URL || "/api",
+    projectRef,
   };
 }
 export function requireResult(result) {
@@ -36,7 +43,7 @@ export class Repository {
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: true,
-        storageKey: `partiva-auth-${DEV_REF}`,
+        storageKey: `partiva-auth-${config.projectRef}`,
       },
     });
   }

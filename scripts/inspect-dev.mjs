@@ -1,6 +1,7 @@
 import { runSupabase } from "./supabase-auth.mjs";
 import { mkdir, writeFile } from "node:fs/promises";
-const project = "twtldgdceidyurinrvsy";
+import { PROJECT, requireInstance } from "./lib/instance-config.mjs";
+requireInstance();
 const commands = [
   [
     "connection",
@@ -9,7 +10,7 @@ const commands = [
       "query",
       "--linked",
       "--project-ref",
-      project,
+      PROJECT,
       "select current_database() as database, current_user as role, version() as version",
       "--output",
       "json",
@@ -22,7 +23,7 @@ const commands = [
       "list",
       "--linked",
       "--project-ref",
-      project,
+      PROJECT,
       "--output",
       "json",
     ],
@@ -34,7 +35,7 @@ const commands = [
       "query",
       "--linked",
       "--project-ref",
-      project,
+      PROJECT,
       "--file",
       "supabase/validation/inspect.sql",
       "--output",
@@ -48,7 +49,7 @@ const commands = [
       "advisors",
       "--linked",
       "--project-ref",
-      project,
+      PROJECT,
       "--type",
       "all",
       "--level",
@@ -59,7 +60,7 @@ const commands = [
   ],
 ];
 const report = {
-  project,
+  PROJECT,
   checked_at: new Date().toISOString(),
   read_only: true,
   checks: {},

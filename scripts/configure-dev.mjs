@@ -1,15 +1,11 @@
 import { runSupabase } from "./supabase-auth.mjs";
 import { writeFileSync } from "node:fs";
+import { PROJECT, requireInstance } from "./lib/instance-config.mjs";
+requireInstance();
+const project = PROJECT;
 // Never reveal or persist the privileged API keys returned by the CLI.
 const result = runSupabase(
-  [
-    "projects",
-    "api-keys",
-    "--project-ref",
-    "twtldgdceidyurinrvsy",
-    "--output",
-    "json",
-  ],
+  ["projects", "api-keys", "--project-ref", project, "--output", "json"],
   { capture: true, timeout: 30000 },
 );
 if (result.status !== 0) {
@@ -47,9 +43,9 @@ if (result.status !== 0) {
     throw new Error("Nenhuma chave pública segura foi encontrada.");
   writeFileSync(
     ".env.local",
-    `VITE_SUPABASE_URL=https://twtldgdceidyurinrvsy.supabase.co\nVITE_SUPABASE_PUBLISHABLE_KEY=${publicKey}\nVITE_API_URL=/api\n`,
+    `VITE_SUPABASE_URL=https://${project}.supabase.co\nVITE_SUPABASE_PUBLISHABLE_KEY=${publicKey}\nVITE_API_URL=/api\n`,
   );
   console.log(
-    "Chave pública do PARTIVAA configurada localmente. Nenhum segredo foi gravado.",
+    "Chave pública da instalação configurada localmente. Nenhum segredo foi gravado.",
   );
 }

@@ -1,0 +1,14 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "partivaa-api",
+  "main": "../../worker/src/index.ts",
+  "compatibility_date": "2026-10-17",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "observability": { "enabled": true, "head_sampling_rate": 1 },
+  "secrets": { "required": ["SUPABASE_SECRET_KEY"] },
+  "vars": {
+    "SUPABASE_URL": "https://twtldgdceidyurinrvsy.supabase.co",
+    "ALLOWED_ORIGIN": "https://partiva.pages.dev",
+  },
+}

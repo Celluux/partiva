@@ -1,6 +1,6 @@
 import { PGlite } from "@electric-sql/pglite";
 import { readFile, readdir } from "node:fs/promises";
-export const COMPANY = "00000000-0000-0000-0000-000000000001";
+export let COMPANY = "";
 export const USERS = {
   admin: "11111111-1111-4111-8111-111111111111",
   operator: "22222222-2222-4222-8222-222222222222",
@@ -28,6 +28,11 @@ export async function database(beforeUpgrade) {
     )
   ).replace("create extension if not exists pgcrypto;", "");
   await db.exec(foundation);
+  COMPANY = (
+    await db.query(
+      "select id from public.workspaces order by created_at, id limit 1",
+    )
+  ).rows[0].id;
   if (beforeUpgrade) await beforeUpgrade(db);
   const migration = await readFile(
     new URL(

@@ -136,11 +136,11 @@ grant insert, update, delete on public.parts to authenticated;
 grant insert on public.part_events to authenticated;
 grant insert, update, delete on public.board_columns to authenticated;
 
--- Primeira fase: todos os usuários autenticados compartilham o workspace principal.
--- A coluna workspace_id permanece para permitir segmentação por empresa no futuro.
-insert into public.workspaces (id, name)
-values ('00000000-0000-0000-0000-000000000001', 'Partiva')
-on conflict (id) do nothing;
+-- Primeira instalação: o workspace recebe um UUID próprio gerado pelo banco.
+-- Uma instalação nova nunca reutiliza o identificador de outra empresa.
+insert into public.workspaces (name)
+select 'Minha empresa'
+where not exists (select 1 from public.workspaces);
 
 drop policy if exists "all authenticated users can use columns" on public.board_columns;
 create policy "all authenticated users can use columns" on public.board_columns for all to authenticated
