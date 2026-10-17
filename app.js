@@ -97,26 +97,37 @@ function updateAuthMode(mode) {
 }
 
 function showAuthenticatedApp(user) {
+  $("#landing-screen").classList.remove("active");
   $("#auth-screen").classList.remove("active");
   $(".app-shell").classList.remove("auth-locked");
+  $(".app-shell").classList.add("is-visible");
   const profile = $(".user-profile .workspace-copy");
   if (profile && user?.email) profile.innerHTML = `<strong>${escapeHtml(user.email.split("@")[0])}</strong><span>Usuário Partiva</span>`;
 }
 
 function showAuthScreen() {
+  $("#landing-screen").classList.remove("active");
   $(".app-shell").classList.add("auth-locked");
+  $(".app-shell").classList.remove("is-visible");
   $("#auth-screen").classList.add("active");
+}
+
+function showLandingScreen() {
+  $("#landing-screen").classList.add("active");
+  $("#auth-screen").classList.remove("active");
+  $(".app-shell").classList.add("auth-locked");
+  $(".app-shell").classList.remove("is-visible");
 }
 
 async function initAuth() {
   const config = window.PARTIVA_CONFIG || {};
-  if (!config.supabaseUrl || !config.supabasePublishableKey) return;
+  if (!config.supabaseUrl || !config.supabasePublishableKey) { showLandingScreen(); return; }
   try {
     const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
     authClient = createClient(config.supabaseUrl, config.supabasePublishableKey, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
     const { data: { session } } = await authClient.auth.getSession();
-    if (session) showAuthenticatedApp(session.user); else showAuthScreen();
-    authClient.auth.onAuthStateChange((_event, nextSession) => { if (nextSession) showAuthenticatedApp(nextSession.user); else showAuthScreen(); });
+    if (session) showAuthenticatedApp(session.user); else showLandingScreen();
+    authClient.auth.onAuthStateChange((_event, nextSession) => { if (nextSession) showAuthenticatedApp(nextSession.user); else showLandingScreen(); });
   } catch (error) {
     showAuthScreen();
     setAuthMessage("Não foi possível conectar ao Supabase. Verifique a configuração.", true);
@@ -124,6 +135,11 @@ async function initAuth() {
   }
 }
 
+$("#landing-login-btn").addEventListener("click", () => { showAuthScreen(); updateAuthMode("login"); });
+$("#landing-signup-btn").addEventListener("click", () => { showAuthScreen(); updateAuthMode("signup"); });
+$("#landing-free-btn").addEventListener("click", () => { showAuthScreen(); updateAuthMode("signup"); });
+$("#landing-final-btn").addEventListener("click", () => { showAuthScreen(); updateAuthMode("signup"); });
+$("#auth-home-link").addEventListener("click", (event) => { event.preventDefault(); showLandingScreen(); });
 $("#auth-switch").addEventListener("click", () => updateAuthMode(authMode === "login" ? "signup" : "login"));
 $("#auth-form").addEventListener("submit", async (event) => {
   event.preventDefault();

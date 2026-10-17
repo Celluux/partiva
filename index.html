@@ -7,13 +7,82 @@
     <title>Partiva — Operação de peças</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <section class="landing-screen active" id="landing-screen" aria-labelledby="landing-title">
+      <header class="landing-nav">
+        <a class="wordmark" href="#top" aria-label="Partiva início">partiva</a>
+        <nav class="landing-links" aria-label="Navegação institucional">
+          <a href="#como-funciona">Como funciona</a>
+          <a href="#beneficios">Benefícios</a>
+          <a href="#faq">Perguntas frequentes</a>
+        </nav>
+        <button class="landing-login" id="landing-login-btn" type="button">Entrar</button>
+      </header>
+
+      <main id="top">
+        <section class="landing-hero">
+          <div class="landing-hero-copy">
+            <div class="eyebrow landing-eyebrow"><span class="eyebrow-dot"></span> GESTÃO DE PEÇAS AUTOMOTIVAS</div>
+            <h1 id="landing-title">Cada peça no seu lugar. Cada etapa à vista.</h1>
+            <p>O Partiva organiza o trabalho do desmonte em um fluxo visual, simples de acompanhar e pronto para a rotina da sua equipe.</p>
+            <div class="landing-actions">
+              <button class="primary-button landing-primary" id="landing-signup-btn" type="button">Criar conta grátis <span>→</span></button>
+              <a class="text-link" href="#como-funciona">Conhecer o Partiva <span>↓</span></a>
+            </div>
+            <div class="landing-proof"><span class="proof-check">✓</span><span>Plano Free para começar sem complicação</span></div>
+          </div>
+          <div class="landing-hero-visual" aria-label="Mascote do Partiva acompanhando uma peça automotiva">
+            <div class="hero-grid-lines"></div>
+            <div class="hero-status-pill"><span></span> FLUXO EM MOVIMENTO</div>
+            <div class="mascot-stage"><img src="assets/partiva-mascot.png" alt="Mascote do Partiva, um robô inspirado em uma peça automotiva" /></div>
+            <div class="hero-floating-card hero-floating-card-top"><span class="floating-icon">↗</span><div><strong>PTV-1042</strong><small>Entrada registrada</small></div></div>
+            <div class="hero-floating-card hero-floating-card-bottom"><span class="floating-icon teal-icon">✓</span><div><strong>Fluxo claro</strong><small>Do cadastro à próxima etapa</small></div></div>
+          </div>
+        </section>
+
+        <section class="landing-value-strip" aria-label="Visão geral do produto">
+          <div><strong>01</strong><span>Cadastre com contexto</span><small>Identificação, veículo, localização e estado.</small></div>
+          <div><strong>02</strong><span>Organize visualmente</span><small>Quadros e colunas que acompanham o seu processo.</small></div>
+          <div><strong>03</strong><span>Avance com clareza</span><small>Veja o próximo passo sem procurar em planilhas.</small></div>
+        </section>
+
+        <section class="landing-section landing-intro" id="como-funciona">
+          <div class="section-heading"><span class="eyebrow">A OPERAÇÃO FICA MAIS LEVE</span><h2>O trabalho acontece em movimento. Sua gestão também pode acontecer.</h2></div>
+          <p>O Partiva transforma as etapas do desmonte em uma visão compartilhada. A equipe sabe o que entrou, o que está em análise e o que já pode seguir para a próxima etapa.</p>
+        </section>
+
+        <section class="landing-benefits" id="beneficios">
+          <article class="benefit-card benefit-card-featured"><span class="benefit-index">01</span><div class="benefit-icon">⌁</div><h3>Um cadastro que entende a peça</h3><p>Registre o essencial em um modal inteligente e deixe cada item com identidade própria desde a entrada.</p><span class="benefit-note">Código interno · veículo · localização</span></article>
+          <article class="benefit-card"><span class="benefit-index">02</span><div class="benefit-icon">▦</div><h3>Um quadro que mostra o próximo passo</h3><p>Crie colunas para o seu processo e acompanhe o avanço sem perder a visão do conjunto.</p><span class="benefit-note">Colunas personalizáveis · fluxo visual</span></article>
+          <article class="benefit-card"><span class="benefit-index">03</span><div class="benefit-icon">⌕</div><h3>Informação à mão quando importa</h3><p>Busque por peça, veículo, categoria ou código e abra a ficha completa em poucos segundos.</p><span class="benefit-note">Busca rápida · filtros · detalhes</span></article>
+        </section>
+
+        <section class="landing-section landing-steps">
+          <div class="section-heading"><span class="eyebrow">COMO COMEÇAR</span><h2>Do primeiro cadastro ao próximo movimento.</h2></div>
+          <div class="steps-list"><div class="step-item"><span>01</span><div><h3>Crie seu acesso</h3><p>Entre no workspace com seu e-mail e senha.</p></div></div><div class="step-item"><span>02</span><div><h3>Cadastre uma peça</h3><p>Comece pelo que a equipe precisa reconhecer no dia a dia.</p></div></div><div class="step-item"><span>03</span><div><h3>Avance o fluxo</h3><p>Mova cada peça pela operação e mantenha o trabalho visível.</p></div></div></div>
+        </section>
+
+        <section class="landing-free-card">
+          <div><span class="eyebrow">PLANO ATUAL</span><h2>Partiva Free</h2><p>A base para colocar a operação em ordem começa gratuita.</p></div>
+          <div class="free-details"><strong>R$ 0</strong><span>para começar</span><button class="primary-button" id="landing-free-btn" type="button">Começar agora <span>→</span></button></div>
+        </section>
+
+        <section class="landing-section landing-faq" id="faq">
+          <div class="section-heading"><span class="eyebrow">PERGUNTAS FREQUENTES</span><h2>Clareza antes de entrar.</h2></div>
+          <div class="faq-list"><details open><summary>O que é o Partiva?</summary><p>É uma plataforma visual para organizar o cadastro e o fluxo operacional de peças automotivas em um único workspace.</p></details><details><summary>O que está disponível no plano Free?</summary><p>O plano atual inclui o acesso ao workspace, cadastro de peças, quadros, colunas personalizáveis, busca, filtros e ficha detalhada.</p></details><details><summary>Preciso mudar o jeito que minha equipe trabalha?</summary><p>Não. As colunas podem ser adaptadas ao processo que sua operação já usa, com uma visão mais simples de acompanhar.</p></details><details><summary>O Partiva já publica anúncios e controla vendas?</summary><p>Essas frentes fazem parte da evolução do produto. Nesta versão, o foco está no cadastro e no acompanhamento operacional das peças.</p></details></div>
+        </section>
+
+        <section class="landing-final-cta"><img src="assets/partiva-mascot.png" alt="Mascote do Partiva" /><div><span class="eyebrow">PRONTO PARA ORGANIZAR?</span><h2>Comece pelo próximo cadastro.</h2><p>O primeiro passo para uma operação mais clara cabe em uma peça.</p></div><button class="primary-button" id="landing-final-btn" type="button">Criar conta grátis <span>→</span></button></section>
+      </main>
+      <footer class="landing-footer"><a class="wordmark" href="#top">partiva</a><span>Gestão visual para operações de peças automotivas.</span><span>Plano Free</span></footer>
+    </section>
+
     <section class="auth-screen" id="auth-screen" aria-labelledby="auth-title">
       <div class="auth-panel">
-        <div class="brand-lockup auth-brand"><div class="brand-mark">P</div><div><div class="brand-name">partiva</div><div class="brand-subtitle">operação inteligente</div></div></div>
+        <div class="brand-lockup auth-brand"><a class="wordmark" href="#top" id="auth-home-link">partiva</a><div class="brand-subtitle">operação inteligente</div></div>
         <div class="auth-kicker" id="auth-kicker">ACESSO AO WORKSPACE</div>
         <h1 id="auth-title">Bem-vindo de volta</h1>
         <p id="auth-description">Entre para acompanhar o fluxo de peças da sua operação.</p>
@@ -24,16 +93,15 @@
           <div class="auth-message hidden" id="auth-message"></div>
         </form>
         <button class="auth-switch" type="button" id="auth-switch">Ainda não tenho uma conta <span>Criar usuário</span></button>
-        <div class="auth-demo-note">Modo demonstração disponível enquanto o Supabase não estiver conectado.</div>
+        <div class="auth-demo-note">Acesso gratuito nesta primeira versão.</div>
       </div>
-      <div class="auth-aside"><div class="auth-orbit orbit-one"></div><div class="auth-orbit orbit-two"></div><div class="auth-aside-copy"><span class="eyebrow">OPERAÇÃO EM MOVIMENTO</span><h2>Do pátio à venda, tudo em um só fluxo.</h2><p>Organize peças, encontre informações e avance o trabalho da equipe com clareza.</p><div class="auth-metric"><strong>12</strong><span>peças acompanhadas<br>nesta semana</span></div></div></div>
+      <div class="auth-aside"><div class="auth-orbit orbit-one"></div><div class="auth-orbit orbit-two"></div><img class="auth-mascot" src="assets/partiva-mascot.png" alt="Mascote do Partiva" /><div class="auth-aside-copy"><span class="eyebrow">OPERAÇÃO EM MOVIMENTO</span><h2>Do pátio à próxima etapa, tudo fica visível.</h2><p>Organize peças, encontre informações e avance o trabalho da equipe com clareza.</p><div class="auth-metric"><strong>Free</strong><span>para começar<br>com tranquilidade</span></div></div></div>
     </section>
     <div class="app-shell">
       <aside class="sidebar">
-        <div class="brand-lockup">
-          <div class="brand-mark">P</div>
+          <div class="brand-lockup">
           <div>
-            <div class="brand-name">partiva</div>
+            <div class="wordmark">partiva</div>
             <div class="brand-subtitle">operação inteligente</div>
           </div>
         </div>

@@ -36,3 +36,10 @@ O projeto está estruturado como site estático para Cloudflare Pages e inclui `
 - O Cloudflare Pages está conectado ao repositório e publica automaticamente cada atualização da branch `main` em `https://partiva.pages.dev/`.
 - O Supabase permanece como backend oficial para autenticação, banco de dados e armazenamento.
 - Não enviar chaves secretas ao navegador ou ao GitHub; apenas a chave publishable do Supabase pode aparecer em `config.js`.
+
+## Identidade visual
+
+- Wordmark textual em Caveat, sem símbolo acoplado ao logotipo.
+- Paleta baseada em azul-petróleo, branco, cinza-claro, grafite e âmbar operacional.
+- Mascote separado em `assets/partiva-mascot.png`.
+- Diretrizes persistidas em `.interface-design/system.md` e `design-system/partiva/MASTER.md`.
