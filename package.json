@@ -1,0 +1,40 @@
+{
+  "name": "partiva",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "check": "tsc --noEmit && node scripts/check-project.mjs",
+    "worker:dev": "wrangler dev --config worker/wrangler.jsonc",
+    "worker:check": "wrangler deploy --dry-run --config worker/wrangler.jsonc",
+    "supabase": "supabase",
+    "test:dev": "node scripts/verify-dev.mjs",
+    "configure:dev": "node scripts/configure-dev.mjs",
+    "auth:setup": "node scripts/connect-supabase.mjs",
+    "supabase:secure": "node scripts/supabase-auth.mjs",
+    "inspect:dev": "node scripts/inspect-dev.mjs",
+    "migrate:dev": "node scripts/migrate-dev.mjs",
+    "bootstrap:admin": "node scripts/bootstrap-admin.mjs",
+    "format:check": "prettier --check app.js src scripts tests worker/src index.html operations.css"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.118.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "5.20261016.1",
+    "@electric-sql/pglite": "0.5.10",
+    "@playwright/test": "1.64.1",
+    "prettier": "3.9.10",
+    "supabase": "2.121.0",
+    "typescript": "7.0.2",
+    "vite": "8.3.4",
+    "vitest": "5.0.5",
+    "wrangler": "4.151.0"
+  }
+}

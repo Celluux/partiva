@@ -126,3 +126,11 @@ body{background:var(--bg);color:var(--ink)}
 .toast-icon{background:#3b9a78;color:#fff}
 @media(max-width:900px){.sidebar{width:225px}.topbar,.board-header{padding-left:27px;padding-right:27px}.kanban-scroll{padding-left:27px;padding-right:27px}}
 @media(max-width:600px){.topbar,.board-header{padding-left:18px;padding-right:18px}.kanban-scroll{padding-left:15px;padding-right:15px}}
+
+/* Official Partiva logo system — based on the supplied vector brand board. */
+:root{--brand-primary:#0E6B6E;--brand-secondary:#8EC1C1;--brand-deep:#0F2E34;--brand-light:#F5F8F8;--teal:var(--brand-primary);--teal-dark:var(--brand-deep);--teal-deep:var(--brand-deep);--teal-soft:#E8F2F2;--purple:var(--brand-primary);--purple-dark:var(--brand-deep);--purple-soft:#E8F2F2;--graphite:var(--brand-deep);--ink:var(--brand-deep);--bg:var(--brand-light);--surface-alt:#EDF5F5;--line:#D7E7E7;--display:'Manrope',sans-serif}
+.wordmark{font-family:'Montserrat',sans-serif;font-style:normal;transform:none;letter-spacing:-.8px;font-weight:700}
+.landing-hero-visual,.auth-aside{background:var(--brand-deep)}
+.landing-nav .wordmark,.landing-footer .wordmark,.auth-brand .wordmark,.sidebar .wordmark{color:var(--brand-deep)}
+.primary-button,.landing-primary,.auth-submit{background:var(--brand-primary)}
+.primary-button:hover,.landing-primary:hover,.auth-submit:hover{background:var(--brand-deep)}

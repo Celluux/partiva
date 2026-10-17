@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
-  <title id="title">Símbolo Partiva</title>
-  <desc id="desc">Duas faixas curvas formando um percurso compacto, com saída diagonal inspirada em uma pista.</desc>
-  <path d="M21 27h51c21 0 34 12 34 29S93 85 72 85H54l18 16" fill="none" stroke="#0f7079" stroke-linecap="round" stroke-linejoin="round" stroke-width="15" />
-  <path d="M21 44h46c10 0 17 5 17 12s-7 13-17 13H21" fill="none" stroke="#8ebdc0" stroke-linecap="round" stroke-linejoin="round" stroke-width="8" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 100" role="img" aria-labelledby="title desc">
+  <title id="title">Símbolo Partiva — versão colorida</title>
+  <desc id="desc">Duas faixas curvas formando o símbolo P da Partiva, com saída diagonal.</desc>
+  <path d="M14 20h58c23 0 40 12 40 30S95 80 72 80H55l-10 14" fill="none" stroke="#0E6B6E" stroke-linecap="round" stroke-linejoin="round" stroke-width="15" />
+  <path d="M14 40h46c12 0 20 5 20 10s-8 10-20 10H14" fill="none" stroke="#8EC1C1" stroke-linecap="round" stroke-linejoin="round" stroke-width="8" />
 </svg>

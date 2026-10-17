@@ -1,0 +1,15 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "partiva-dev-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-17",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "observability": { "enabled": true, "head_sampling_rate": 1 },
+  "vars": {
+    "SUPABASE_URL": "https://jelqadbfyfmouulhsvvs.supabase.co",
+    "SUPABASE_PUBLISHABLE_KEY": "",
+    "ALLOWED_ORIGIN": "http://127.0.0.1:5173",
+  },
+  "dev": { "port": 8787, "ip": "127.0.0.1" },
+}
