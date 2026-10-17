@@ -5,7 +5,7 @@
 - Personality: precise, human, practical and trustworthy.
 - Product world: automotive parts, workshop flow, inventory labels, graphite metal and petroleum-blue enamel.
 - Density: dense enough for daily operations, with generous breathing room on public pages.
-- Signature: the Partiva wordmark is text-only in a lightly handwritten Caveat style; the separate mascot is a friendly teal brake-caliper navigator holding an inventory tag.
+- Signature: a geometric petroleum-blue P symbol uses a negative-space mechanical profile beside the lightly handwritten Caveat wordmark; the separate mascot is a confident teal-and-graphite mechanical mouse mechanic.
 
 ## Palette
 
@@ -22,7 +22,7 @@ Use color to communicate state or action. Keep the page mostly neutral and reser
 
 ## Typography
 
-- Wordmark: Caveat 700, lowercase partiva, text-only.
+- Wordmark: Caveat 700, lowercase partiva, paired with the standalone `assets/partiva-symbol.svg` mark.
 - Product headings: Manrope 700–800, tight tracking.
 - Body and interface labels: DM Sans 400–700.
 - Type hierarchy: 11px metadata, 12–14px interface copy, 17px supporting copy, 30–50px section headings, 44px+ public hero.
@@ -46,7 +46,7 @@ Use color to communicate state or action. Keep the page mostly neutral and reser
 - Primary button: petroleum teal, 44–50px high, 10–11px radius, clear verb.
 - Secondary button: white surface, quiet border, graphite text.
 - Operational card: white surface, 1px border, 9–18px radius depending on context.
-- Mascot: use only as a supporting guide or welcome element; never merge it with the wordmark.
+- Mascot: use only as a supporting guide or welcome element; never merge it with the wordmark or symbol. The source asset is `assets/partiva-mascot.png`.
 - Interactive states: default, hover, active, focus, disabled, loading, empty and error must remain visible and understandable.
 
 ## Content rules

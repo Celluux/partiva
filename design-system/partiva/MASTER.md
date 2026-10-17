@@ -42,9 +42,14 @@
 
 - **Heading Font:** Manrope
 - **Body Font:** DM Sans
-- **Wordmark:** Caveat, lowercase, text-only
+- **Wordmark:** Caveat, lowercase, paired with an independent negative-space P symbol
 - **Mood:** precise, human, practical, trustworthy
 - **Google Fonts:** [Caveat + DM Sans + Manrope](https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap)
+
+### Brand Assets
+
+- **Symbol:** `assets/partiva-symbol.svg` — original geometric P with a transparent negative-space mechanical profile.
+- **Mascot:** `assets/partiva-mascot.png` — original teal-and-graphite mechanical mouse mechanic, used as a supporting visual in the institutional and authentication surfaces.
 
 **CSS Import:**
 ```css
