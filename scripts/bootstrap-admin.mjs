@@ -3,7 +3,7 @@ import { writeFile, mkdir } from "node:fs/promises";
 const email = process.env.PARTIVA_ADMIN_EMAIL?.trim().toLowerCase();
 if (!email || !/^[^ @]+@[^ @]+\.[^ @]+$/.test(email))
   throw new Error(
-    "Defina PARTIVA_ADMIN_EMAIL com a conta Auth autorizada, já existente no partiva-dev.",
+    "Defina PARTIVA_ADMIN_EMAIL com a conta Auth autorizada, já existente no PARTIVAA.",
   );
 const literal = "'" + email.replace(/'/g, "''") + "'";
 const sql = `begin; do $$ declare uid uuid; w uuid='00000000-0000-0000-0000-000000000001'; begin
@@ -21,7 +21,7 @@ const result = runSupabase(
     "query",
     "--linked",
     "--project-ref",
-    "jelqadbfyfmouulhsvvs",
+    "twtldgdceidyurinrvsy",
     "--file",
     "artifacts/private/bootstrap-admin.sql",
   ],

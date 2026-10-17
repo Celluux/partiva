@@ -1,6 +1,6 @@
 import { runSupabase } from "./supabase-auth.mjs";
 import { mkdir, writeFile } from "node:fs/promises";
-const project = "jelqadbfyfmouulhsvvs";
+const project = "twtldgdceidyurinrvsy";
 const commands = [
   [
     "connection",
@@ -77,7 +77,7 @@ for (const [name, args] of commands) {
   );
   if (name === "connection" && result.status !== 0) {
     console.error(
-      "A conexão com partiva-dev não foi estabelecida. Nenhuma operação de escrita foi executada.",
+      "A conexão com PARTIVAA não foi estabelecida. Nenhuma operação de escrita foi executada.",
     );
     process.exitCode = 1;
     break;

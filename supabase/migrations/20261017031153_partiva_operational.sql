@@ -1,5 +1,5 @@
 -- Additive operational upgrade. Existing pieces, files, events and legacy codes stay intact.
--- Deploy only to partiva-dev (jelqadbfyfmouulhsvvs); production deployment is not authorized.
+-- Deploy only to PARTIVAA (twtldgdceidyurinrvsy); production deployment is not authorized.
 begin;
 create schema if not exists partiva_private;
 revoke all on schema partiva_private from public, anon;

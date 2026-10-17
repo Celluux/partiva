@@ -2,7 +2,7 @@
 
 Projeto local: `C:\Users\marce\OneDrive\Documentos\PARTIVA`.
 Branch: `codex/partiva-operacional`.
-Destino externo autorizado: `partiva-dev` (`jelqadbfyfmouulhsvvs`).
+Destino externo autorizado: `PARTIVAA` (`twtldgdceidyurinrvsy`).
 
 ## Implementado e verificado localmente
 
@@ -35,7 +35,9 @@ As fixtures locais de Auth e transporte de arquivos não substituem a homologaç
 
 ## Validação externa
 
-A primeira tentativa de leitura do `partiva-dev` foi bloqueada por ausência de `SUPABASE_ACCESS_TOKEN` na CLI. Nenhuma migração remota foi aplicada nessa tentativa.
+Em 17/10/2026, todas as configurações foram atualizadas para o projeto oficial `PARTIVAA` (`twtldgdceidyurinrvsy`), incluindo frontend, Worker, CSP, scripts e testes. A configuração rejeita outros projetos. As duas migrações locais permanecem preparadas, sem execução remota.
+
+As tentativas de listar os projetos e consultar o banco nesta sessão retornaram `Access token not provided`, mesmo após o login informado no PowerShell. O histórico e o esquema remoto ainda não puderam ser conferidos. Nenhuma migração remota foi aplicada. A tentativa de inspeção está registrada no arquivo local ignorado pelo Git `artifacts/private/dev-inspection.json`.
 
 Foi preparado um assistente de autenticação com entrada oculta e proteção DPAPI fora do repositório. A verificação externa prossegue após sua configuração pelo usuário, sem compartilhar o token na conversa.
 

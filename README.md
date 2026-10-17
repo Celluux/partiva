@@ -15,9 +15,9 @@ Frontend em `http://127.0.0.1:5173`. Em outro terminal, `pnpm worker:dev` execut
 
 Sem a chave pública do Supabase, a tela informa a configuração pendente e bloqueia operações. Não há dados fictícios, login alternativo ou gravação local como substituto do banco.
 
-## Supabase de desenvolvimento
+## Projeto Supabase oficial
 
-Somente **partiva-dev**, referência **jelqadbfyfmouulhsvvs**, é autorizado nesta implementação. Frontend, Worker e scripts de migração rejeitam o projeto antigo. Nenhuma implantação em produção é autorizada por estes scripts.
+Somente **PARTIVAA**, referência **twtldgdceidyurinrvsy**, é autorizado nesta implementação. Frontend, Worker e scripts de migração rejeitam o projeto antigo. Nenhuma implantação em produção é autorizada por estes scripts.
 
 Para configurar um token já criado, execute no seu terminal local:
 
@@ -28,8 +28,8 @@ node scripts/connect-supabase.mjs
 O campo de entrada é oculto. O Windows criptografa a credencial com DPAPI em `%LOCALAPPDATA%\Partiva\CodexCredentials`, com acesso restrito ao usuário e SYSTEM. O invocador injeta o token somente no ambiente do processo da CLI. O token não fica em argumentos, código, `.env`, histórico do terminal ou Git.
 
 ```powershell
-node scripts/supabase-auth.mjs db query --linked --project-ref jelqadbfyfmouulhsvvs "select current_database()"
-node scripts/supabase-auth.mjs migration list --linked --project-ref jelqadbfyfmouulhsvvs
+node scripts/supabase-auth.mjs db query --linked --project-ref twtldgdceidyurinrvsy "select current_database()"
+node scripts/supabase-auth.mjs migration list --linked --project-ref twtldgdceidyurinrvsy
 pnpm configure:dev
 pnpm inspect:dev
 ```
@@ -39,7 +39,7 @@ pnpm inspect:dev
 Antes de migrar, confira o banco, o histórico e os registros existentes. A cópia SQL na raiz é um arquivo legado; a pasta `supabase/migrations` é a fonte das migrações.
 
 ```powershell
-node scripts/supabase-auth.mjs link --project-ref jelqadbfyfmouulhsvvs
+node scripts/supabase-auth.mjs link --project-ref twtldgdceidyurinrvsy
 pnpm migrate:dev
 ```
 

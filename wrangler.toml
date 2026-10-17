@@ -1,7 +1,7 @@
-name = "partiva-dev"
+name = "partivaa"
 compatibility_date = "2026-10-16"
 pages_build_output_dir = "dist"
 
 [[services]]
 binding = "PARTIVA_API"
-service = "partiva-dev-api"
+service = "partivaa-api"

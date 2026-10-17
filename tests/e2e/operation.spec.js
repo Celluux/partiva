@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 test.beforeEach(async ({ page, request }) => {
   await request.post("http://127.0.0.1:5199/test/reset");
   await page.route(
-    "https://jelqadbfyfmouulhsvvs.supabase.co/**",
+    "https://twtldgdceidyurinrvsy.supabase.co/**",
     async (route) => {
       const url = new URL(route.request().url());
       const response = await route.fetch({
@@ -24,7 +24,8 @@ async function login(page, role = "admin") {
   await page
     .getByRole("button", { name: "Entrar no Partiva", exact: true })
     .click();
-  await expect(page.locator("#application")).toBeVisible();
+  // The first login also compiles and loads the complete application in Vite.
+  await expect(page.locator("#application")).toBeVisible({ timeout: 15000 });
 }
 async function draft(page, name = "Motor") {
   await page.getByRole("button", { name: "+ Nova peça", exact: true }).click();
@@ -321,7 +322,7 @@ test("moves cards by dragging and updates a second employee session", async ({
   const context = await browser.newContext();
   const second = await context.newPage();
   await second.route(
-    "https://jelqadbfyfmouulhsvvs.supabase.co/**",
+    "https://twtldgdceidyurinrvsy.supabase.co/**",
     async (route) => {
       const url = new URL(route.request().url());
       const response = await route.fetch({
@@ -335,26 +336,22 @@ test("moves cards by dragging and updates a second employee session", async ({
   try {
     await login(second, "operator");
     const card = page.locator("[data-drag-piece]").first();
-    const destination = page
-      .locator(".kanban-column")
-      .filter({
-        has: page
-          .locator(".column-header strong")
-          .filter({ hasText: /^Fotografias pendentes$/ }),
-      });
+    const destination = page.locator(".kanban-column").filter({
+      has: page
+        .locator(".column-header strong")
+        .filter({ hasText: /^Fotografias pendentes$/ }),
+    });
     await card.dragTo(destination);
     await expect(destination).toContainText("Motor");
     await second
       .getByRole("button", { name: "Atualizar", exact: true })
       .click();
     await expect(
-      second
-        .locator(".kanban-column")
-        .filter({
-          has: second
-            .locator(".column-header strong")
-            .filter({ hasText: /^Fotografias pendentes$/ }),
-        }),
+      second.locator(".kanban-column").filter({
+        has: second
+          .locator(".column-header strong")
+          .filter({ hasText: /^Fotografias pendentes$/ }),
+      }),
     ).toContainText("Motor");
   } finally {
     await second.unrouteAll({ behavior: "wait" });

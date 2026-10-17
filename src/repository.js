@@ -1,13 +1,13 @@
 import { createClient } from "@supabase/supabase-js";
 import { validatePhoto } from "./domain.js";
-export const DEV_REF = "jelqadbfyfmouulhsvvs";
+export const DEV_REF = "twtldgdceidyurinrvsy";
 export function getConfig() {
   const url =
     import.meta.env.VITE_SUPABASE_URL ||
     window.PARTIVA_CONFIG?.supabaseUrl ||
     `https://${DEV_REF}.supabase.co`;
   if (new URL(url).hostname !== `${DEV_REF}.supabase.co`)
-    throw new Error("Este aplicativo está restrito ao projeto partiva-dev.");
+    throw new Error("Este aplicativo está restrito ao projeto PARTIVAA.");
   return {
     url,
     key:

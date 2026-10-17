@@ -6,7 +6,7 @@ const result = runSupabase(
     "projects",
     "api-keys",
     "--project-ref",
-    "jelqadbfyfmouulhsvvs",
+    "twtldgdceidyurinrvsy",
     "--output",
     "json",
   ],
@@ -14,7 +14,7 @@ const result = runSupabase(
 );
 if (result.status !== 0) {
   console.error(
-    "Configuração externa pendente: CLI Supabase sem acesso ao partiva-dev. Configure VITE_SUPABASE_PUBLISHABLE_KEY em .env.local.",
+    "Configuração externa pendente: CLI Supabase sem acesso ao PARTIVAA. Configure VITE_SUPABASE_PUBLISHABLE_KEY em .env.local.",
   );
   process.exitCode = 1;
 } else {
@@ -47,9 +47,9 @@ if (result.status !== 0) {
     throw new Error("Nenhuma chave pública segura foi encontrada.");
   writeFileSync(
     ".env.local",
-    `VITE_SUPABASE_URL=https://jelqadbfyfmouulhsvvs.supabase.co\nVITE_SUPABASE_PUBLISHABLE_KEY=${publicKey}\nVITE_API_URL=/api\n`,
+    `VITE_SUPABASE_URL=https://twtldgdceidyurinrvsy.supabase.co\nVITE_SUPABASE_PUBLISHABLE_KEY=${publicKey}\nVITE_API_URL=/api\n`,
   );
   console.log(
-    "Chave pública do partiva-dev configurada localmente. Nenhum segredo foi gravado.",
+    "Chave pública do PARTIVAA configurada localmente. Nenhum segredo foi gravado.",
   );
 }

@@ -1,7 +1,7 @@
 import { it, expect, vi, afterEach } from "vitest";
 import worker from "../worker/src/index";
 const env = {
-  SUPABASE_URL: "https://jelqadbfyfmouulhsvvs.supabase.co",
+  SUPABASE_URL: "https://twtldgdceidyurinrvsy.supabase.co",
   SUPABASE_PUBLISHABLE_KEY: "public-test",
   ALLOWED_ORIGIN: "http://127.0.0.1:5173",
 };
