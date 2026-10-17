@@ -42,9 +42,9 @@
 
 - **Heading Font:** Manrope
 - **Body Font:** DM Sans
-- **Wordmark:** Caveat, lowercase, paired with an independent negative-space P symbol
+- **Wordmark:** Space Grotesk 700 italic, lowercase, with tight optical tracking and a subtle forward skew; paired with an independent negative-space P symbol
 - **Mood:** precise, human, practical, trustworthy
-- **Google Fonts:** [Caveat + DM Sans + Manrope](https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap)
+- **Google Fonts:** [Space Grotesk + DM Sans + Manrope + Caveat](https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap)
 
 ### Brand Assets
 
@@ -53,7 +53,7 @@
 
 **CSS Import:**
 ```css
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
 ```
 
 ### Spacing Variables

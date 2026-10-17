@@ -5,7 +5,7 @@
 - Personality: precise, human, practical and trustworthy.
 - Product world: automotive parts, workshop flow, inventory labels, graphite metal and petroleum-blue enamel.
 - Density: dense enough for daily operations, with generous breathing room on public pages.
-- Signature: a geometric petroleum-blue P symbol uses a negative-space mechanical profile beside the lightly handwritten Caveat wordmark; the separate mascot is a confident teal-and-graphite mechanical mouse mechanic.
+- Signature: a geometric petroleum-blue P symbol uses a negative-space mechanical profile beside a forward-leaning Space Grotesk wordmark; the separate mascot is a confident teal-and-graphite mechanical mouse mechanic.
 
 ## Palette
 
@@ -22,7 +22,7 @@ Use color to communicate state or action. Keep the page mostly neutral and reser
 
 ## Typography
 
-- Wordmark: Caveat 700, lowercase partiva, paired with the standalone `assets/partiva-symbol.svg` mark.
+- Wordmark: Space Grotesk 700 italic, lowercase partiva, with tight optical tracking and a subtle forward skew; paired with the standalone `assets/partiva-symbol.svg` mark.
 - Product headings: Manrope 700–800, tight tracking.
 - Body and interface labels: DM Sans 400–700.
 - Type hierarchy: 11px metadata, 12–14px interface copy, 17px supporting copy, 30–50px section headings, 44px+ public hero.

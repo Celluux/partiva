@@ -23,4 +23,12 @@
 .mascot-stage img{max-height:440px}
 .auth-mascot{max-height:520px;object-fit:contain;object-position:center bottom}
 @media(max-width:650px){.landing-nav .brand-symbol{width:30px;height:30px}.landing-nav .wordmark{font-size:34px}.auth-brand .brand-symbol{width:32px;height:32px}.auth-brand .wordmark{font-size:36px}}
+
+/* Wordmark direction: technical geometry with a slight forward motion */
+.wordmark{font-family:'Space Grotesk',sans-serif;font-size:29px;font-weight:700;line-height:1;letter-spacing:-1.35px;font-style:italic;transform:skewX(-5deg);transform-origin:left center;color:var(--graphite)}
+.landing-nav .wordmark{font-size:32px;color:var(--teal-dark)}
+.landing-footer .wordmark{font-size:25px;color:var(--teal-dark)}
+.auth-brand .wordmark{font-size:36px;color:var(--teal-dark)}
+.sidebar .wordmark{font-size:28px;color:var(--teal-dark)}
+@media(max-width:650px){.landing-nav .wordmark{font-size:31px}.auth-brand .wordmark{font-size:33px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.benefit-card,.primary-button{transition:none}.benefit-card:hover,.primary-button:hover{transform:none}}
