@@ -9,7 +9,7 @@ if (linked !== project)
   throw new Error(
     "Vincule primeiro a CLI exclusivamente ao PARTIVAA: supabase link --project-ref twtldgdceidyurinrvsy.",
   );
-const args = ["db", "push", "--linked"];
+const args = ["db", "push", "--linked", "--skip-vault"];
 if (!process.argv.includes("--apply")) args.push("--dry-run");
 const result = runSupabase(args);
 process.exitCode = result.status ?? 1;

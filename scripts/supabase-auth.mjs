@@ -15,7 +15,7 @@ export function cliEnvironment() {
     !existsSync(join(directory, "supabase-cli-token.dpapi"))
   )
     return env;
-  const script = String.raw`$ErrorActionPreference='Stop';$path=Join-Path $env:LOCALAPPDATA 'Partiva\CodexCredentials\supabase-cli-token.dpapi';$secure=ConvertTo-SecureString ([IO.File]::ReadAllText($path));$pointer=[Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure);try{[Console]::Out.Write([Runtime.InteropServices.Marshal]::PtrToStringBSTR($pointer))}finally{[Runtime.InteropServices.Marshal]::ZeroFreeBSTR($pointer);$secure.Dispose()}`;
+  const script = String.raw`$ErrorActionPreference='Stop';Import-Module (Join-Path $PSHOME 'Modules\Microsoft.PowerShell.Security\Microsoft.PowerShell.Security.psd1') -ErrorAction Stop;$path=Join-Path $env:LOCALAPPDATA 'Partiva\CodexCredentials\supabase-cli-token.dpapi';$secure=ConvertTo-SecureString ([IO.File]::ReadAllText($path));$pointer=[Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure);try{[Console]::Out.Write([Runtime.InteropServices.Marshal]::PtrToStringBSTR($pointer))}finally{[Runtime.InteropServices.Marshal]::ZeroFreeBSTR($pointer);$secure.Dispose()}`;
   const result = spawnSync(
     "powershell.exe",
     ["-NoProfile", "-NonInteractive", "-Command", script],

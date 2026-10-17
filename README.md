@@ -11,7 +11,7 @@ pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-Frontend em `http://127.0.0.1:5173`. Em outro terminal, `pnpm worker:dev` executa o backend de convites em `127.0.0.1:8787`; o frontend encaminha `/api` para ele. Não é necessário Docker para executar o frontend, Worker ou os testes PostgreSQL locais.
+Frontend em `http://127.0.0.1:5173`. Em outro terminal, `pnpm worker:connected` executa o backend de convites conectado ao PARTIVAA em `127.0.0.1:8787`; o frontend encaminha `/api` para ele. Não é necessário Docker para executar o frontend, Worker ou os testes PostgreSQL locais.
 
 Sem a chave pública do Supabase, a tela informa a configuração pendente e bloqueia operações. Não há dados fictícios, login alternativo ou gravação local como substituto do banco.
 
@@ -89,3 +89,5 @@ Os testes de banco executam as migrações reais em PostgreSQL embarcado (PGlite
 GitHub permanece como fonte versionada. O workflow de verificação executa build, código, banco e navegador; ele não publica. Cloudflare Pages hospeda `dist`, e Pages Functions encaminha `/api` para o Worker privado de desenvolvimento. Os arquivos do sistema antigo e suas credenciais não são usados na nova execução.
 
 As atualizações devem ser revisadas em branch própria. Não faça merge ou publicação de produção sem autorização. Consulte `IMPLEMENTACAO.md` para resultados e pendências de homologação.
+
+A integração real foi validada em 17/10/2026; consulte `IMPLEMENTACAO.md`. Os scripts `validate-live.mjs` e `validate-live-browser.mjs` gravam dados técnicos e só devem ser executados com autorização explícita e `--allow-writes`. Não fazem parte da execução normal ou CI.

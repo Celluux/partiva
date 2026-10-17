@@ -33,14 +33,30 @@ Destino externo autorizado: `PARTIVAA` (`twtldgdceidyurinrvsy`).
 
 As fixtures locais de Auth e transporte de arquivos não substituem a homologação real do Supabase Auth, Storage e Realtime. Os números acima correspondem à suíte local, não a uma aprovação do ambiente remoto.
 
-## Validação externa
+## Validação real do PARTIVAA — 17/10/2026
 
-Em 17/10/2026, todas as configurações foram atualizadas para o projeto oficial `PARTIVAA` (`twtldgdceidyurinrvsy`), incluindo frontend, Worker, CSP, scripts e testes. A configuração rejeita outros projetos. As duas migrações locais permanecem preparadas, sem execução remota.
+Conexão autenticada com o projeto oficial `twtldgdceidyurinrvsy`, usando credencial protegida pelo Windows. Chave pública configurada em `.env.local`; chave administrativa usada somente em memória no teste e no ambiente do Worker local.
 
-As tentativas de listar os projetos e consultar o banco nesta sessão retornaram `Access token not provided`, mesmo após o login informado no PowerShell. O histórico e o esquema remoto ainda não puderam ser conferidos. Nenhuma migração remota foi aplicada. A tentativa de inspeção está registrada no arquivo local ignorado pelo Git `artifacts/private/dev-inspection.json`.
+Quatro migrações aplicadas e registradas: fundação, operação, otimização das políticas RLS e resposta de conflitos de negócio. Simulação final confirmou banco atualizado, sem migrações pendentes. Snapshot dos dados e políticas anteriores preservado em `artifacts/private/partivaa-before-migration.json`, fora do Git.
 
-Foi preparado um assistente de autenticação com entrada oculta e proteção DPAPI fora do repositório. A verificação externa prossegue após sua configuração pelo usuário, sem compartilhar o token na conversa.
+A conta autorizada pelo usuário está vinculada como administradora da única empresa ativa. Cadastro público desabilitado e retornos de autenticação configurados para o aplicativo local. Todas as tabelas públicas têm RLS e os buckets de fotos e logotipo são privados.
 
-Ainda dependem da conferência do ambiente externo: histórico real de migrações, aplicação compatível da migração aditiva, primeiro administrador autorizado, configuração das chaves, regras efetivas do Storage, Realtime e envio de convites pelo Auth. A API oficial do Mercado Livre permanece deliberadamente desconectada.
+### Testes efetivamente executados no serviço real
 
-Nenhum reset, exclusão física de dados, alteração do sistema antigo ou publicação em produção faz parte desta execução.
+- Dez verificações integradas aprovadas: Auth e isolamento, rascunhos simultâneos, identificadores, edição/conflitos, Kanban configurável e transferência segura, Realtime entre sessões, Storage privado com originais/versões/capa/ordem, empresa/preferências/perfis, bloqueio de anúncios incompletos e reservas/vendas/cancelamentos/histórico.
+- Cinco funções verificadas por HTTP com conflitos de versão retornando 409 imediatamente. Corrigido o uso de SQLSTATE 40001 para conflitos de negócio, que provocava repetição pelo PostgREST; agora usam PT409.
+- Navegador real conectado diretamente ao Supabase: login, edição, tabela, recarga e confirmação dos dados gravados no PostgreSQL. Sem interceptação de rede ou transporte simulado nessa verificação.
+- Relatórios privados: `artifacts/private/partivaa-live-validation.json`, `partivaa-live-browser.json` e `dev-inspection.json`.
+- Ao final: quatro contas técnicas bloqueadas e sem vínculo ativo; três peças técnicas arquivadas; três fotografias e histórico preservados. Nenhuma peça técnica permanece no estoque ativo.
+
+### Execução e limites atuais
+
+Frontend local em http://127.0.0.1:5173 e Worker Wrangler em http://127.0.0.1:8787. Para iniciar novamente: `pnpm dev` e, em outro terminal, `pnpm worker:connected`. O segundo usa a credencial DPAPI para carregar as chaves somente no processo do Wrangler.
+
+O backend de convites está configurado; envio e entrega de e-mails ainda não foram testados, pois nenhum convite foi enviado. Hospedagem e segredos de produção no Cloudflare dependem da publicação autorizada. A API oficial do Mercado Livre permanece desconectada; vendas online são registradas mediante confirmação manual, sem publicar anúncios.
+
+A auditoria final não aponta mais os avisos de desempenho RLS corrigidos. Resta o aviso de proteção contra senhas vazadas: o Supabase recusou a ativação com HTTP 402 porque exige plano Pro ou superior. Nenhuma contratação foi realizada.
+
+As peças, configurações, funcionários, histórico e fotografias usam Supabase real. O navegador mantém a sessão de autenticação e recuperação temporária de preenchimento; isso não substitui a persistência do banco.
+
+Nenhum reset, exclusão física de dados, alteração do sistema antigo ou publicação em produção foi executado.

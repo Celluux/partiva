@@ -70,6 +70,12 @@ describe("PostgreSQL operational integration", () => {
         part.version,
       ]),
     ).rejects.toThrow(/outra pessoa/);
+    await expect(
+      rpc(db, "operator", "save_part", [
+        { id: part.id, part_name: "Conflito" },
+        part.version,
+      ]),
+    ).rejects.toMatchObject({ code: "PT409" });
   });
   it("allows repeated Detran with a warning", async () => {
     const ref = crypto.randomUUID();

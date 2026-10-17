@@ -31,6 +31,7 @@ export class Repository {
   constructor(config) {
     this.config = config;
     this.client = createClient(config.url, config.key, {
+      db: { retry: false },
       auth: {
         persistSession: true,
         autoRefreshToken: true,

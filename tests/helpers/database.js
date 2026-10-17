@@ -1,5 +1,5 @@
 import { PGlite } from "@electric-sql/pglite";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 export const COMPANY = "00000000-0000-0000-0000-000000000001";
 export const USERS = {
   admin: "11111111-1111-4111-8111-111111111111",
@@ -37,6 +37,17 @@ export async function database(beforeUpgrade) {
     "utf8",
   );
   await db.exec(migration);
+  const migrationDirectory = new URL(
+    "../../supabase/migrations/",
+    import.meta.url,
+  );
+  for (const file of (await readdir(migrationDirectory)).sort()) {
+    if (
+      file.endsWith(".sql") &&
+      file > "20261017031153_partiva_operational.sql"
+    )
+      await db.exec(await readFile(new URL(file, migrationDirectory), "utf8"));
+  }
   for (const [role, id] of Object.entries(USERS))
     await db.query("insert into auth.users(id,email) values($1,$2)", [
       id,

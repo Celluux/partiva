@@ -21,7 +21,8 @@
     "inspect:dev": "node scripts/inspect-dev.mjs",
     "migrate:dev": "node scripts/migrate-dev.mjs",
     "bootstrap:admin": "node scripts/bootstrap-admin.mjs",
-    "format:check": "prettier --check app.js src scripts tests worker/src index.html operations.css"
+    "format:check": "prettier --check app.js src scripts tests worker/src index.html operations.css",
+    "worker:connected": "node scripts/worker-connected.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.118.0"

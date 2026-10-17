@@ -6,7 +6,7 @@ if (process.platform !== "win32")
 // The credential is read by PowerShell itself, in the user's local terminal.
 // It never enters Node's arguments, console output, Git or a plaintext file.
 const script = String.raw`
-$ErrorActionPreference='Stop'
+$ErrorActionPreference='Stop';Import-Module (Join-Path $PSHOME 'Modules\Microsoft.PowerShell.Security\Microsoft.PowerShell.Security.psd1') -ErrorAction Stop
 $root=Join-Path $env:LOCALAPPDATA 'Partiva'
 $directory=Join-Path $root 'CodexCredentials'
 foreach($entry in @($root,$directory)){if(Test-Path -LiteralPath $entry){if((Get-Item -LiteralPath $entry).Attributes -band [IO.FileAttributes]::ReparsePoint){throw 'Diretório de credenciais redirecionado. Configuração interrompida.'}}else{New-Item -ItemType Directory -Path $entry | Out-Null}}
