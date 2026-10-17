@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f8fafc" />
+    <title>Partiva — Operação de peças</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <section class="auth-screen" id="auth-screen" aria-labelledby="auth-title">
+      <div class="auth-panel">
+        <div class="brand-lockup auth-brand"><div class="brand-mark">P</div><div><div class="brand-name">partiva</div><div class="brand-subtitle">operação inteligente</div></div></div>
+        <div class="auth-kicker" id="auth-kicker">ACESSO AO WORKSPACE</div>
+        <h1 id="auth-title">Bem-vindo de volta</h1>
+        <p id="auth-description">Entre para acompanhar o fluxo de peças da sua operação.</p>
+        <form id="auth-form" class="auth-form">
+          <label class="field"><span>E-mail</span><input id="auth-email" type="email" autocomplete="email" required placeholder="voce@empresa.com" /></label>
+          <label class="field"><span>Senha</span><input id="auth-password" type="password" autocomplete="current-password" minlength="6" required placeholder="Mínimo de 6 caracteres" /></label>
+          <button class="primary-button auth-submit" type="submit" id="auth-submit">Entrar no Partiva <span>→</span></button>
+          <div class="auth-message hidden" id="auth-message"></div>
+        </form>
+        <button class="auth-switch" type="button" id="auth-switch">Ainda não tenho uma conta <span>Criar usuário</span></button>
+        <div class="auth-demo-note">Modo demonstração disponível enquanto o Supabase não estiver conectado.</div>
+      </div>
+      <div class="auth-aside"><div class="auth-orbit orbit-one"></div><div class="auth-orbit orbit-two"></div><div class="auth-aside-copy"><span class="eyebrow">OPERAÇÃO EM MOVIMENTO</span><h2>Do pátio à venda, tudo em um só fluxo.</h2><p>Organize peças, encontre informações e avance o trabalho da equipe com clareza.</p><div class="auth-metric"><strong>12</strong><span>peças acompanhadas<br>nesta semana</span></div></div></div>
+    </section>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand-lockup">
+          <div class="brand-mark">P</div>
+          <div>
+            <div class="brand-name">partiva</div>
+            <div class="brand-subtitle">operação inteligente</div>
+          </div>
+        </div>
+
+        <div class="workspace-switcher">
+          <div class="avatar avatar-orange">DR</div>
+          <div class="workspace-copy"><strong>Desmonte Rodrigues</strong><span>Workspace principal</span></div>
+          <span class="chevron">⌄</span>
+        </div>
+
+        <nav class="main-nav" aria-label="Navegação principal">
+          <button class="nav-item active" type="button"><span class="nav-icon">▦</span>Operação</button>
+          <button class="nav-item" type="button"><span class="nav-icon">▤</span>Estoque</button>
+          <button class="nav-item" type="button"><span class="nav-icon">◷</span>Atividade</button>
+          <button class="nav-item" type="button"><span class="nav-icon">⌁</span>Anúncios <span class="nav-badge">3</span></button>
+          <button class="nav-item" type="button"><span class="nav-icon">▱</span>Vendas</button>
+        </nav>
+
+        <div class="sidebar-section">
+          <div class="sidebar-heading"><span>Seus quadros</span><button id="add-board-btn" class="icon-button small" type="button" aria-label="Adicionar quadro">+</button></div>
+          <button class="board-link selected" type="button"><span class="board-dot purple"></span>Fluxo de peças <span class="board-count" id="sidebar-card-count">12</span></button>
+          <button class="board-link" type="button"><span class="board-dot green"></span>Vistorias e entrada</button>
+          <button class="board-link" type="button"><span class="board-dot yellow"></span>Publicações da semana</button>
+        </div>
+
+        <div class="sidebar-footer">
+          <button class="nav-item" type="button"><span class="nav-icon">⚙</span>Configurações</button>
+          <div class="user-profile"><div class="avatar avatar-purple">MA</div><div class="workspace-copy"><strong>Marcelo A.</strong><span>Administrador</span></div><span class="more">•••</span></div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div class="breadcrumbs"><span>Operação</span><span class="breadcrumb-separator">/</span><strong>Fluxo de peças</strong></div>
+          <div class="topbar-actions"><button class="help-button" type="button">?</button><button class="notification-button" type="button" aria-label="Notificações"><span>♢</span><i></i></button><div class="avatar avatar-purple top-avatar">MA</div></div>
+        </header>
+
+        <section class="board-header">
+          <div class="board-title-row"><div><div class="eyebrow">QUADRO OPERACIONAL</div><h1>Fluxo de peças</h1><p class="board-description">Acompanhe cada peça desde a entrada até a venda.</p></div><div class="header-actions"><button class="secondary-button" id="invite-btn" type="button"><span>♙</span> Compartilhar</button><button class="primary-button" id="new-card-btn" type="button"><span>+</span> Nova peça</button></div></div>
+          <div class="board-toolbar"><div class="toolbar-left"><div class="search-box"><span>⌕</span><input id="search-input" type="search" placeholder="Buscar peça, veículo ou código..." /></div><button class="filter-button" id="filter-btn" type="button"><span>≡</span> Filtros <b id="filter-count" class="filter-count hidden">0</b></button><div class="active-filters" id="active-filters"></div></div><div class="toolbar-right"><button class="view-button active" type="button">▦ Quadro</button><button class="view-button" type="button">☷ Lista</button><span class="toolbar-divider"></span><button class="icon-button" type="button" aria-label="Mais opções">•••</button></div></div>
+        </section>
+
+        <section class="kanban-scroll" aria-label="Quadro de fluxo de peças"><div class="kanban-board" id="kanban-board"></div><button class="add-column-button" id="add-column-btn" type="button"><span>+</span> Adicionar coluna</button></section>
+      </main>
+    </div>
+
+    <div class="modal-backdrop hidden" id="modal-backdrop">
+      <section class="modal create-modal hidden" id="create-modal" role="dialog" aria-modal="true" aria-labelledby="create-modal-title">
+        <div class="modal-header"><div><div class="modal-kicker">NOVA PEÇA</div><h2 id="create-modal-title">Vamos cadastrar uma peça</h2><p>Comece pelo essencial. O Partiva organiza o restante com você.</p></div><button class="close-button" data-close-modal type="button" aria-label="Fechar">×</button></div>
+        <div class="progress-track"><div class="progress-step active"><span>1</span><strong>Identificação</strong></div><div class="progress-line"></div><div class="progress-step"><span>2</span><strong>Operação</strong></div><div class="progress-line"></div><div class="progress-step"><span>3</span><strong>Venda</strong></div></div>
+        <form id="piece-form">
+          <div class="smart-intro"><div class="sparkle">✦</div><div><strong>Cadastro inteligente</strong><span>Os campos aparecem conforme você preenche.</span></div></div>
+          <div class="form-grid"><label class="field full-width"><span>Nome ou descrição curta <em>*</em></span><input id="piece-title" name="title" required placeholder="Ex.: Farol dianteiro esquerdo" autofocus /><small>Use o nome que sua equipe reconhece no dia a dia.</small></label><label class="field"><span>Veículo de origem</span><input id="piece-vehicle" name="vehicle" placeholder="Ex.: VW Gol 2019" /></label><label class="field"><span>Referência interna</span><input id="piece-reference" name="reference" placeholder="Gerada automaticamente" /></label><label class="field"><span>Categoria</span><select id="piece-category" name="category"><option>Carroceria</option><option>Elétrica</option><option>Mecânica</option><option>Interior</option><option>Suspensão</option><option>Rodas e pneus</option></select></label><label class="field"><span>Localização no estoque</span><input id="piece-location" name="location" placeholder="Ex.: Corredor A · Estante 04" /></label><label class="field"><span>Estado de conservação</span><select id="piece-condition" name="condition"><option>Excelente</option><option>Bom</option><option>Regular</option><option>Para recuperar</option></select></label><label class="field"><span>Preço sugerido</span><div class="input-prefix"><span>R$</span><input id="piece-price" name="price" type="number" min="0" step="0.01" placeholder="0,00" /></div></label><label class="field full-width"><span>Observações da equipe</span><textarea id="piece-notes" name="notes" rows="3" placeholder="Detalhes, avarias, compatibilidades ou próximos passos..."></textarea></label></div>
+          <div class="modal-footer"><span class="save-hint"><span class="status-dot"></span> Salvo automaticamente como rascunho</span><div><button class="secondary-button" data-close-modal type="button">Cancelar</button><button class="primary-button" type="submit">Criar peça <span>→</span></button></div></div>
+        </form>
+      </section>
+
+      <section class="modal detail-modal hidden" id="detail-modal" role="dialog" aria-modal="true" aria-labelledby="detail-title"><div class="detail-topbar"><div class="detail-status" id="detail-status">EM DESMONTAGEM</div><button class="close-button" data-close-modal type="button" aria-label="Fechar">×</button></div><div class="detail-hero"><div class="piece-visual large" id="detail-visual"><span>◈</span></div><div class="detail-heading"><div class="eyebrow">PEÇA <span id="detail-code">PTV-0000</span></div><h2 id="detail-title">—</h2><p id="detail-vehicle">—</p><div class="detail-tags" id="detail-tags"></div></div></div><div class="detail-tabs"><button class="detail-tab active" type="button">Resumo</button><button class="detail-tab" type="button">Histórico <span>4</span></button><button class="detail-tab" type="button">Fotos <span id="detail-photo-count">0</span></button></div><div class="detail-body"><div class="detail-info-grid"><div><span>Localização</span><strong id="detail-location">—</strong></div><div><span>Conservação</span><strong id="detail-condition">—</strong></div><div><span>Preço sugerido</span><strong id="detail-price">—</strong></div><div><span>Categoria</span><strong id="detail-category">—</strong></div></div><div class="detail-section"><div class="section-title"><h3>Próximas ações</h3><span class="mini-label">FLUXO OPERACIONAL</span></div><div class="action-list"><label><input type="checkbox" checked /> Confirmar retirada e identificação</label><label><input type="checkbox" /> Fotografar todos os ângulos</label><label><input type="checkbox" /> Revisar preço de anúncio</label></div></div><div class="detail-section"><div class="section-title"><h3>Observações</h3><button class="text-button" type="button">Editar</button></div><p class="detail-notes" id="detail-notes">Sem observações registradas.</p></div></div><div class="detail-footer"><button class="danger-button" id="delete-piece-btn" type="button">Excluir peça</button><div><button class="secondary-button" data-close-modal type="button">Fechar</button><button class="primary-button" id="move-piece-btn" type="button">Avançar etapa <span>→</span></button></div></div></section>
+
+      <section class="modal small-modal hidden" id="column-modal" role="dialog" aria-modal="true" aria-labelledby="column-modal-title"><div class="modal-header"><div><div class="modal-kicker">PERSONALIZAR FLUXO</div><h2 id="column-modal-title">Nova coluna</h2><p>Adicione uma etapa que faça sentido para sua operação.</p></div><button class="close-button" data-close-modal type="button" aria-label="Fechar">×</button></div><form id="column-form"><label class="field"><span>Nome da coluna <em>*</em></span><input name="name" required placeholder="Ex.: Em conferência" /></label><div class="modal-footer"><span></span><div><button class="secondary-button" data-close-modal type="button">Cancelar</button><button class="primary-button" type="submit">Adicionar coluna</button></div></div></form></section>
+    </div>
+
+    <div class="toast hidden" id="toast"><span class="toast-icon">✓</span><span id="toast-message">Alterações salvas</span></div>
+    <script src="config.js"></script>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
