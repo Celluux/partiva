@@ -54,6 +54,7 @@ export function runSupabase(args, { capture = false, timeout = 60000 } = {}) {
       encoding: "utf8",
       stdio: capture ? "pipe" : "inherit",
       timeout,
+      maxBuffer: 64 * 1024 * 1024,
       windowsHide: true,
     },
   );

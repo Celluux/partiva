@@ -12,6 +12,7 @@ export const options = (items, value = "", empty = "Selecione") =>
 export const field = (key, label, value = "", extra = "") =>
   `<label class="field"><span>${h(label)}</span><input name="${key}" value="${h(value ?? "")}" ${extra}/></label>`;
 export const EVENT_LABELS = {
+  reservation_updated: "Reserva atualizada",
   legacy_imported: "Cadastro preservado do sistema antigo",
   commercial_details_updated: "Detalhes comerciais atualizados",
   legacy_hold_released: "Repouso do sistema antigo encerrado",

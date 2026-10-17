@@ -80,6 +80,7 @@ export class Repository {
       preferences,
       companyEvents,
       legacyDrafts,
+      sales,
     ] = await Promise.all([
       this.all("workspaces", (q) => q.eq("id", workspaceId)),
       this.all("board_columns", (q) => q.eq("workspace_id", workspaceId)),
@@ -91,6 +92,7 @@ export class Repository {
         ? this.all("company_events", (q) => q.eq("workspace_id", workspaceId))
         : Promise.resolve([]),
       this.all("legacy_drafts", (q) => q.eq("workspace_id", workspaceId)),
+      this.all("part_sales", (q) => q.eq("workspace_id", workspaceId)),
     ]);
     if (companies.length !== 1)
       throw new Error(
@@ -109,6 +111,7 @@ export class Repository {
       events,
       companyEvents,
       legacyDrafts,
+      sales,
       preferences: preferences[0]?.settings || {},
     };
   }

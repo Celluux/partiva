@@ -6,7 +6,9 @@ import {
   checked,
   sqlRead,
 } from "./lib/partivaa-service.mjs";
-const directory = "artifacts/private/desmonte-migration/backup-before-import";
+const directory =
+  process.argv[2] ||
+  "artifacts/private/desmonte-migration/backup-before-import";
 await mkdir(directory, { recursive: true });
 try {
   await readFile(`${directory}/BACKUP-COMPLETE.json`);
@@ -26,6 +28,7 @@ const tables = [
   "public.company_events",
   "public.user_preferences",
   "public.app_configuration",
+  "public.legacy_drafts",
 ];
 const expr = tables
   .map(

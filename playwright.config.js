@@ -1,8 +1,13 @@
 import { defineConfig, devices } from "@playwright/test";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 const port = Number(process.env.PARTIVA_E2E_PORT || 5173);
 if (!Number.isInteger(port) || port < 1024 || port > 65535)
   throw new Error("Porta E2E inválida.");
 export default defineConfig({
+  // OneDrive may lock trace files during browser shutdown. Keep transient
+  // browser artifacts outside the synchronized checkout.
+  outputDir: join(tmpdir(), "partiva-e2e", `run-${process.pid}`),
   testDir: "tests/e2e",
   testMatch: "*.spec.js",
   fullyParallel: false,

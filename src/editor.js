@@ -678,6 +678,7 @@ export const editorMethods = {
             external_order_id: form.get("external_order_id"),
             confirmed: form.get("confirmed") === "on",
             note: form.get("note"),
+            customer: form.get("customer"),
           },
         });
         await this.syncEditor();
@@ -686,6 +687,16 @@ export const editorMethods = {
       },
       "Confirmar operação",
     );
+    if (command === "reserve")
+      $("#action-error").insertAdjacentHTML(
+        "beforebegin",
+        field(
+          "customer",
+          "Cliente / responsável pela retirada",
+          "",
+          'maxlength="200"',
+        ),
+      );
   },
   renderHistory() {
     $("#panel-history").innerHTML =

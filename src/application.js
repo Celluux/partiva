@@ -15,12 +15,18 @@ import {
 import { $, h, date, options, EVENT_LABELS } from "./ui.js";
 import { editorMethods } from "./editor.js";
 import { companyMethods } from "./company.js";
+import { navigationMethods, routeView } from "./navigation.js";
 import mascotUrl from "../assets/partiva-mascot.png";
 export class Application {
   constructor(repo, onAccessError) {
     this.repo = repo;
     this.onAccessError = onAccessError;
-    this.view = "board";
+    this.view = routeView(location.hash);
+    this.onRoute = () => {
+      if (location.hash === "#main-content") return;
+      this.navigate(routeView(location.hash), true);
+    };
+    window.addEventListener("hashchange", this.onRoute);
     this.filters = {
       query: "",
       category: "",
@@ -109,6 +115,7 @@ export class Application {
     this.offerRecovery();
   }
   stop() {
+    clearTimeout(this.commercialSearch);
     this.stopped = true;
     this.unsubscribe?.();
     clearInterval(this.poll);
@@ -116,6 +123,7 @@ export class Application {
     clearTimeout(this.refreshTimer);
     clearTimeout(this.autosave);
     window.removeEventListener("beforeunload", this.onBeforeUnload);
+    window.removeEventListener("hashchange", this.onRoute);
     $("#piece-dialog").removeEventListener("cancel", this.onCancel);
     this.editor = null;
     $("#piece-dialog").close();
@@ -191,15 +199,20 @@ export class Application {
       6500,
     );
   }
-  navigate(view) {
+  navigate(view, fromHistory = false) {
     if (
       (this.companyDirty || this.memberDirty) &&
       !confirm("Descartar as alterações da empresa ainda não salvas?")
-    )
+    ) {
+      if (fromHistory) history.replaceState(null, "", `#/${this.view}`);
       return;
+    }
     this.companyDirty = false;
     this.memberDirty = false;
+    clearTimeout(this.commercialSearch);
     this.view = view;
+    if (!fromHistory && location.hash !== `#/${view}`)
+      history.pushState(null, "", `#/${view}`);
     $("#application").classList.remove("menu-open");
     $("#mobile-menu").setAttribute("aria-expanded", "false");
     this.render();
@@ -253,13 +266,16 @@ export class Application {
       board: "Quadro operacional",
       table: "Peças em tabela",
       listings: "Anúncios",
-      sales: "Vendas e reservas",
+      sales: "Vendas",
+      reservations: "Reservas",
       activity: "Atividade",
       company: "Minha Empresa",
     }[this.view];
     $("#workspace-content").setAttribute("aria-busy", "false");
     if (this.view === "company") return this.renderCompany();
     if (this.view === "activity") return this.renderActivity();
+    if (["listings", "sales", "reservations"].includes(this.view))
+      return this.renderCommercial();
     this.renderOperation();
   }
   filtered() {
@@ -566,4 +582,9 @@ export class Application {
       `<div class="workspace-panel"><h1>Atividade da operação</h1><p class="muted">Ações reais com funcionário e data.</p>${this.timeline([...this.data.events].sort((a, b) => b.created_at.localeCompare(a.created_at)).slice(0, 200))}</div>`;
   }
 }
-Object.assign(Application.prototype, editorMethods, companyMethods);
+Object.assign(
+  Application.prototype,
+  editorMethods,
+  companyMethods,
+  navigationMethods,
+);

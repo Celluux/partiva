@@ -9,13 +9,22 @@ test.beforeEach(async ({ page, request }) => {
         url: `http://127.0.0.1:5199${url.pathname}${url.search}`,
         maxRetries: route.request().method() === "GET" ? 2 : 0,
       });
-      await route.fulfill({ response });
+      try {
+        await route.fulfill({ response });
+      } catch (error) {
+        // A browser-cancelled thumbnail may finish while the modal closes.
+        // All other fixture transport failures must still fail the test.
+        if (!String(error.message).includes("Route is already handled"))
+          throw error;
+      }
     },
   );
   await page.routeWebSocket(/supabase.co\/realtime/, (ws) => ws.close());
 });
 test.afterEach(async ({ page }) => {
-  await page.unrouteAll({ behavior: "wait" });
+  // Assertions finish before teardown; cancel remaining thumbnail transports
+  // instead of waiting for requests from a document that is being closed.
+  await page.unrouteAll({ behavior: "ignoreErrors" });
 });
 async function login(page, role = "admin") {
   await page.goto("/");
@@ -35,6 +44,82 @@ async function draft(page, name = "Motor") {
     .click();
   await expect(page.locator("#save-status")).toHaveText("Salvo no banco");
 }
+test("all seven sidebar routes open, survive reload and browser back", async ({
+  page,
+}) => {
+  await login(page);
+  for (const view of [
+    "table",
+    "listings",
+    "sales",
+    "reservations",
+    "activity",
+    "company",
+    "board",
+  ]) {
+    await page.locator(`[data-nav="${view}"]`).click();
+    await expect(page).toHaveURL(new RegExp(`#/${view}$`));
+    await expect(page.locator("#workspace-content")).not.toBeEmpty();
+    await page.reload();
+    await expect(page.locator(`[data-nav="${view}"]`)).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+  }
+  await page.goBack();
+  await expect(page.locator('[data-nav="company"]')).toHaveAttribute(
+    "aria-current",
+    "page",
+  );
+});
+test("reservation page creates, edits and confirms a sale through shared records", async ({
+  page,
+}) => {
+  await login(page);
+  await draft(page, "Motor de navegação");
+  await page.locator("#done-piece").click();
+  await page.locator('[data-nav="reservations"]').click();
+  await page
+    .getByRole("button", { name: "Criar reserva", exact: true })
+    .click();
+  await page
+    .locator('#action-dialog select[name="piece"]')
+    .selectOption({ index: 1 });
+  await page.getByRole("button", { name: "Continuar", exact: true }).click();
+  await page
+    .locator('#action-dialog textarea[name="note"]')
+    .fill("Reserva de teste");
+  await page
+    .getByRole("button", { name: "Confirmar operação", exact: true })
+    .click();
+  await page.locator("#done-piece").click();
+  await expect(page.locator("#workspace-content")).toContainText(
+    "Reserva de teste",
+  );
+  await page
+    .getByRole("button", { name: "Editar reserva", exact: true })
+    .click();
+  await page
+    .getByLabel("Cliente / responsável pela retirada")
+    .fill("Cliente teste");
+  await page.locator("#action-submit").click();
+  await expect(page.locator("#workspace-content")).toContainText(
+    "Cliente teste",
+  );
+  await page
+    .getByRole("button", { name: "Confirmar venda", exact: true })
+    .click();
+  await page.locator('#action-dialog input[name="amount"]').fill("100");
+  await page
+    .getByRole("button", { name: "Confirmar operação", exact: true })
+    .click();
+  await page.locator("#done-piece").click();
+  await page.locator('[data-nav="sales"]').click();
+  await expect(page.locator("#workspace-content")).toContainText(
+    "Motor de navegação",
+  );
+  await expect(page.locator("#workspace-content")).toContainText("100,00");
+});
 test("creates and edits partial drafts, persists and synchronizes the table", async ({
   page,
 }) => {
@@ -61,9 +146,7 @@ test("creates and edits partial drafts, persists and synchronizes the table", as
   await expect(page.getByRole("table")).toContainText("123,45");
   await page.reload();
   await expect(page.locator("#application")).toBeVisible();
-  await page
-    .getByRole("button", { name: new RegExp(`Abrir peça ${id} Motor`) })
-    .click();
+  await page.getByRole("button", { name: `Abrir #${id}`, exact: true }).click();
   await page
     .getByRole("button", { name: "3. Anúncio e preço", exact: true })
     .click();
@@ -354,7 +437,7 @@ test("moves cards by dragging and updates a second employee session", async ({
       }),
     ).toContainText("Motor");
   } finally {
-    await second.unrouteAll({ behavior: "wait" });
+    await second.unrouteAll({ behavior: "ignoreErrors" });
     await context.close();
   }
 });
